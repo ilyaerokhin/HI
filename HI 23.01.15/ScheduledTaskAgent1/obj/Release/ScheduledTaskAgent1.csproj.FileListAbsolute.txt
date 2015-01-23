@@ -1,0 +1,4 @@
+C:\Users\Илья\Desktop\HI 06.01.15\ScheduledTaskAgent1\Bin\Release\ScheduledTaskAgent1.dll
+C:\Users\Илья\Desktop\HI 06.01.15\ScheduledTaskAgent1\Bin\Release\ScheduledTaskAgent1.pdb
+C:\Users\Илья\Desktop\HI 06.01.15\ScheduledTaskAgent1\obj\Release\ScheduledTaskAgent1.dll
+C:\Users\Илья\Desktop\HI 06.01.15\ScheduledTaskAgent1\obj\Release\ScheduledTaskAgent1.pdb

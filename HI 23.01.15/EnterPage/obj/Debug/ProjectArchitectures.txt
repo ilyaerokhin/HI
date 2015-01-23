@@ -1,0 +1,2 @@
+C:\Users\user\Desktop\HI 20.01.15\EnterPage\EnterPage.csproj;neutral
+C:\Users\user\Desktop\HI 20.01.15\ScheduledTaskAgent1\ScheduledTaskAgent1.csproj;neutral
