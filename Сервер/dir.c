@@ -5,7 +5,7 @@
 #include <sys/types.h>
 
 #define MAXSIZEPASSWORD 20
-#define MAXSIZEDOUBLE 16
+#define MAXSIZEDOUBLE 20
 #define MAXSIZENAME 20
 #define MAXSIZESTATUS 256
 
@@ -258,7 +258,8 @@ int AddUser(char *path, char *user, char *password, char *email)
 		Write(path, user, password, 3);
 		Write(path, user, email, 4);
 		Write(path, user, text, 5);
-		Write(path, user, text, 6);
+		char *status = "@";
+		Write(path, user, status, 6);
 		return 0; 
 	}
 	else
@@ -404,7 +405,28 @@ int GetStatus(char *path, char *user, char *status)
 	if(n==0)
 	{
 		Read(path, user, status, 6);
-      	return 0;
+      		return 0;
+	}
+	else
+	{
+		return 1;
+	}
+}
+
+int GetPassword(char *path, char *user, char *password, char *email)
+{
+	char dir[strlen(path)+strlen(user)];
+	strcpy(dir,path);
+	strcat(dir,"/");
+	strcat(dir,user);
+
+	int n = access(dir, 0);
+	
+	if(n==0)
+	{
+		Read(path, user, password, 3);
+		Read(path, user, email, 4);
+      		return 0;
 	}
 	else
 	{
@@ -524,35 +546,39 @@ int first2(char * str)
 	} 
 	if((str[0]=='<') && (str[1]=='f') && (str[2]=='c') && (str[3]=='/'))
    	{
-      	return 2;
+      		return 2;
    	}
 	if((str[0]=='<') && (str[1]=='c') && (str[2]=='u') && (str[3]=='/'))
    	{
-      	return 3;
+      		return 3;
    	}
 	if((str[0]=='<') && (str[1]=='a') && (str[2]=='d') && (str[3]=='/'))
    	{
-      	return 4;
+      		return 4;
    	}
 	if((str[0]=='<') && (str[1]=='a') && (str[2]=='f') && (str[3]=='/'))
    	{
-      	return 5;
+      		return 5;
    	}
 	if((str[0]=='<') && (str[1]=='l') && (str[2]=='f') && (str[3]=='/'))
    	{
-      	return 6;
+      		return 6;
    	}
 	if((str[0]=='<') && (str[1]=='d') && (str[2]=='f') && (str[3]=='/'))
    	{
-      	return 7;
+      		return 7;
    	}
 	if((str[0]=='<') && (str[1]=='s') && (str[2]=='s') && (str[3]=='/'))
    	{
-      	return 8;
+      		return 8;
    	}
 	if((str[0]=='<') && (str[1]=='g') && (str[2]=='s') && (str[3]=='/'))
    	{
-      	return 9;
+      		return 9;
+   	}
+	if((str[0]=='<') && (str[1]=='g') && (str[2]=='p') && (str[3]=='/'))
+   	{
+      		return 10;
    	}
 	return 0;
 }
@@ -567,6 +593,7 @@ void DO(char *str, char *request)
 	char password[MAXSIZEPASSWORD];
 	char * path = "./users";
 	char status[MAXSIZESTATUS];
+	char * email_from = "hi.app@yandex.ru";
 
 	int m = first2(str);
 
@@ -577,7 +604,7 @@ void DO(char *str, char *request)
    	if(m == 1)
 	{
 
-      	pars_3(str,user,x,y);
+      		pars_3(str,user,x,y);
 		char dir[strlen(path)+strlen(user)];
 		strcpy(dir,path);
 		strcat(dir,"/");
@@ -597,15 +624,15 @@ void DO(char *str, char *request)
    	}
    	if(m == 2)
 	{
-      	pars_1(str,userfriend);
+      		pars_1(str,userfriend);
 		char dir[strlen(path)+strlen(userfriend)];
 		strcpy(dir,path);
 		strcat(dir,"/");
 		strcat(dir,userfriend);
 
 		int n = access(dir, 0);
-      	if(n==0)
-      	{	
+      		if(n==0)
+      		{	
 			printf("n = %d\n",n);
 			Read(path, userfriend, x, 1);
 			Read(path, userfriend, y, 2);
@@ -614,11 +641,11 @@ void DO(char *str, char *request)
 			strcat(dir,"/longitude.txt");
 			stat(dir,&st);
 			dateANDtime((char*)ctime(&st.st_mtime),date);
-         	sprintf(request, "<fc/%s/%s/%s/%s>\0", userfriend, x, y,date); 
+         		sprintf(request, "<fc/%s/%s/%s/%s>\0", userfriend, x, y,date); 
       	}
       	else
       	{
-			printf("n = %d\n",n);
+		printf("n = %d\n",n);
         	sprintf(request, "<fc/not>\0");
       	} 
    	}
@@ -627,7 +654,7 @@ void DO(char *str, char *request)
 		pars_2(str,user,password);
 		int n = CheckUser(path, user, password);
 		switch(n)
-        {
+        	{
         	case 0:
 			sprintf(request, "<cu/ok>\0");
 			break;
@@ -735,5 +762,22 @@ void DO(char *str, char *request)
 		{
 			sprintf(request, "<gs/bad>\0");
 		}
+	}
+	if(m == 10)
+	{
+		pars_1(str,user);
+		int a = GetPassword(path, user, password, email);
+		if(a == 0)
+		{
+			char email_mes[40];
+			sprintf(email_mes, "Your password: %s\0", password); 
+			sendmail(email, email_from, "Password recovery", email_mes);
+			sprintf(request, "<gp/%s>\0", email);
+		}
+		else
+		{
+			sprintf(request, "<gp/bad>\0");
+		}
+		
 	}
 }
