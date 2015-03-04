@@ -19,12 +19,23 @@ namespace EnterPage
 {
     public partial class NavigationPage : PhoneApplicationPage
     {
-        // Конструктор пейджа:
+        Requests request;
         public NavigationPage()
         {
-            InitializeComponent();            // Инициализация компонентов пейджа
-        }
+            InitializeComponent();
+            request = new Requests();
 
+            if (request.isConnecting() == false)
+            {
+                MessageBox.Show("Неудаётся подключиться к серверу\nВозможно отсутствует подключение к интернету");
+                IsolatedStorageSettings.ApplicationSettings.Save();
+                Application.Current.Terminate();
+            }
+        }
+        private void Refresh()
+        {
+            NavigationService.Navigate(new Uri("/NavigationPage.xaml?" + DateTime.Now.Ticks, UriKind.Relative));
+        }
         private void CreateService()
         {
             string ToastAgentName = "Agent-Toast";     // Имя фонового процесса
@@ -51,10 +62,6 @@ namespace EnterPage
             try
             {
                 ScheduledActionService.Add(myPeriodicTask);
-
-#if DEBUG
-                ScheduledActionService.LaunchForTest(ToastAgentName, TimeSpan.FromSeconds(10));
-#endif
             }
             catch (Exception ex)
             {
@@ -62,8 +69,6 @@ namespace EnterPage
             }
 
         }
-
-        // Отправляем координаты пользователя
         private int SetCoordinates()
         {
             GeoCoordinateWatcher watcher = new GeoCoordinateWatcher();  //
@@ -73,26 +78,15 @@ namespace EnterPage
             // если координаты известны
             if (coord.IsUnknown != true)
             {
-                PublicData.Latitude = coord.Latitude;                   // Сохраняем широту
-                PublicData.Longitude = coord.Longitude;                 // Сохраняем долготу
+                User.Latitude = coord.Latitude;                   // Сохраняем широту
+                User.Longitude = coord.Longitude;                 // Сохраняем долготу
 
-                SocketClient client = new SocketClient();               //
-                string rez = client.Connect(PublicData.IP, PublicData.PORT);                  // СОЕДИНЯЕМСЯ С СЕРВЕРОМ
-                //
-                //если неуспех, то выходим
-                if (!rez.Contains("Success"))
+                int value = request.SetCoordinates(User.Name, User.Latitude, User.Longitude);
+                if (value != 0)
                 {
-                    client.Close();
-                    return 1;
-                }
-
-                // отправляем на сервер запрос с координатами пользователя
-                // структура запроса: <uc/username/широта/долгота>
-                // подробнее в документации по запросам
-
-                client.Send("<uc/" + PublicData.Username.ToLower() + "/" + coord.Latitude + "/" + coord.Longitude + ">"); // отправка запроса
-                string result = client.Receive();                       // получаем ответ от сервера
-                client.Close();                                         // закрываем соединение
+                    MessageBox.Show("Ошибка при старте, попробуйте войти ещё раз");
+                    Refresh();
+                }                                         // закрываем соединение
                 watcher.Stop();
             }
             else
@@ -100,9 +94,7 @@ namespace EnterPage
                 return 1;
             }
             return 0;
-            //NotifyComplete();                                           // что-то нужное
         }
-
         private int SetLoginAndPassword()
         {
             // ПОЛУЧЕНИЕ ДАННЫХ ИЗ ЛОКАЛЬНОГО ХРАНИЛИЩА
@@ -117,12 +109,12 @@ namespace EnterPage
                         // чтение файла
                         using (var reader = new StreamReader(file))
                         {
-                            PublicData.Username = reader.ReadLine();
-                            PublicData.Password = reader.ReadLine();
+                            User.Name = reader.ReadLine();
+                            User.Password = reader.ReadLine();
                         }
                     }
                     // если вместо имени и пароля нули, то выйти
-                    if (PublicData.Username.CompareTo("0") == 0 && PublicData.Username.CompareTo("0") == 0)
+                    if (User.Name.CompareTo("0") == 0 && User.Name.CompareTo("0") == 0)
                     {
                         return 2; // 2 = неудача
                     }
@@ -135,31 +127,13 @@ namespace EnterPage
             }
             return 0; // 0 = удача
         }
-
-        //действия при загрузке пейджа
         private void PhoneApplicationPage_Loaded(object sender, RoutedEventArgs e)
         {
             // если пароль и логин сохранены
             int result = SetLoginAndPassword();
             if (result == 0)
             {
-                SocketClient client = new SocketClient();                                              // создаём сокет
-                string rez = client.Connect(PublicData.IP, PublicData.PORT);                           // подключаемся к серверу
-
-                // Если подключиться невозможно
-                if (!rez.Contains("Success"))
-                {
-                    client.Close();                                                                    // закрываем сокет
-                    MessageBox.Show("Неудаётся подключиться к серверу\nВозможно отсутствует подключение к интернету");
-                    IsolatedStorageSettings.ApplicationSettings.Save();                                // сохраняем настройки
-                    Application.Current.Terminate();                                                   // выключаем приложение
-                }
-
-
-                // Пытаемся получить короординаты пользователя
-                while (SetCoordinates() != 0) ;
-
-                client.Close();                                                                        // закрываем соединение с сервером
+                while (SetCoordinates() != 0) ; // Пытаемся получить короординаты пользователя
                 CreateService();                  // Создание сервиса для работы фонового процесса
                 NavigationService.Navigate(new Uri("/ActionPage.xaml", UriKind.Relative));             // переходим на другую страницу
             }
@@ -175,7 +149,6 @@ namespace EnterPage
                 NavigationService.Navigate(new Uri("/Resolution.xaml", UriKind.Relative));               // переходим на другую страницу
             }
         }
-
         private void PhoneApplicationPage_BackKeyPress(object sender, System.ComponentModel.CancelEventArgs e)
         {
              IsolatedStorageSettings.ApplicationSettings.Save();

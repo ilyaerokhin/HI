@@ -26,10 +26,20 @@ namespace EnterPage
         PhotoChooserTask photoChooserTask;
         CameraCaptureTask cameraCaptureTask;
         string photo;
+        Requests request;
         public ActionPage()
         {
             InitializeComponent();
-            Title.Text = "Hello, " + PublicData.Username.ToLower()+"!";
+            request = new Requests();
+
+            if (request.isConnecting() == false)
+            {
+                MessageBox.Show("Неудаётся подключиться к серверу\nВозможно отсутствует подключение к интернету");
+                IsolatedStorageSettings.ApplicationSettings.Save();
+                Application.Current.Terminate();
+            }
+
+            Title.Text = "Hello, " + User.Name.ToLower()+"!";
 
             // для фоток 
             //*********************************************************************************
@@ -39,79 +49,73 @@ namespace EnterPage
             cameraCaptureTask.Completed += new EventHandler<PhotoResult>(cameraCaptureTask_Comp);
             //**********************************************************************************
             //установка фотографии
-            BitmapImage bmp = new BitmapImage(new Uri("http://109.120.164.212/photos/" + PublicData.Username.ToLower() + ".jpg"  + "?" + Guid.NewGuid().ToString(), UriKind.RelativeOrAbsolute));
+            BitmapImage bmp = new BitmapImage(new Uri("http://109.120.164.212/photos/" + User.Name.ToLower() + ".jpg"  + "?" + Guid.NewGuid().ToString(), UriKind.RelativeOrAbsolute));
             MyPhoto.Source = bmp;
-            //MyPhoto.Stretch =System.Windows.Media.Stretch.Uniform;
-
-            //list1.DataContext = PublicData.p1;
         }
-
-        //Функция таймера
-        
-
+        private void Refresh()
+        {
+            NavigationService.Navigate(new Uri("/ActionPage.xaml?" + DateTime.Now.Ticks, UriKind.Relative));
+        }
         private void PhoneApplicationPage_Loaded(object sender, RoutedEventArgs e)
         {
-            SocketClient client = new SocketClient();                                              // создаём сокет
-            string rez = client.Connect(PublicData.IP, PublicData.PORT);                           // подключаемся к серверу
+            User.ListFriends = new List<Friend>();                                                    // создаём список друзей
 
-            PublicData.p1 = new List<Friend>();                                                    // создаём список друзей
-
-            client.Send("<lf/" + PublicData.Username.ToLower() + "/" + PublicData.Password + ">"); // запрашиваем с сервера список друзей пользователя
-            string result = client.Receive();                                                      // получаем ответ
-
-            string[] friends = result.Split(new Char[] { '/', '|', '<', '>' });                    // выдёргиваем из ответа строки между разделителями
-
-            // флажок нужен для пропуска первого захода
-            bool flag = true;
-
-            // в цикле заполняем список друзей
+            string value = request.GetListFriends(User.Name, User.Password);
+            string[] friends = value.Split(new Char[] { '/' });                    // выдёргиваем из ответа строки между разделителями
+            
             foreach (string s in friends)
             {
                 // если строка не пустая
                 if (s.Trim() != "")
                 {
-                    // исключаем первый заход
-                    if (flag != true)
+                    list1.DataContext = User.ListFriends;
+                    string friendstatus = request.GetStatus(s); // получаем статус друга
+                    string datafriends = request.GetFrendCoordinates(s); // получаем данные о друге
+
+                    if(status == null || datafriends == null)
                     {
-                        list1.DataContext = PublicData.p1;
-                        client.Send("<gs/" + s + ">");                                             // запрос на получение статуса друга
-                        result = client.Receive();                                                 // получение ответа сервера
-
-                        // !!!!!!
-                        // ТУТ НУЖНО ОБРАБОТАТЬ ВАРИАНТЫ ПУСТОГО ОТВЕТА И ОТВЕТА ОБ ОШИБКЕ
-                        // !!!!!!
-
-                        string[] status = result.Split(new Char[] { '<', '/', '>' });              // выдёргиваем из ответа статус (status[2])
-
-                        client.Send("<fc/" + s + ">");                                             // запрос на получение других данных пользователя
-                        result = client.Receive();                                                 // получение ответа сервера
-                        string[] data = result.Split(new Char[] { '/', '<', '>' });                // выдёргиваем строки из ответа
-                        double lat = Convert.ToDouble(data[3]);
-                        double lng = Convert.ToDouble(data[4]);
-                        // если статус пусто;
-                        if (status[2].CompareTo("@") == 0)
-                        {
-                            // добавляем пользователя с его новыми данными с пустым статусом
-                            PublicData.p1.Add(new Friend() { name = s, status = "", date = PublicData.DateSearch(data[5]), distance = PublicData.latlng2distance(PublicData.Latitude, PublicData.Longitude, lat, lng), ImagePath = "http://109.120.164.212/photos/" + s + ".jpg" + "?" + Guid.NewGuid().ToString() });
-                        }
-                        // если статус не пустой
-                        else
-                        {
-                            // добавляем пользователя со всеми его новыми данными
-                            PublicData.p1.Add(new Friend() { name = s, status = status[2], date = PublicData.DateSearch(data[5]), distance = PublicData.latlng2distance(PublicData.Latitude, PublicData.Longitude, lat, lng), ImagePath = "http://109.120.164.212/photos/" + s + ".jpg" + "?" + Guid.NewGuid().ToString() });
-                        }
+                        MessageBox.Show("Ошибка при получении информации о друзьях, попробуйте ещё раз");
+                        Refresh();
                     }
+
+          
+                    string[] data = datafriends.Split(new Char[] { '/' });                // выдёргиваем строки из ответа
+                    double lat = Convert.ToDouble(data[0]);
+                    double lng = Convert.ToDouble(data[1]);
+                    // если статус пуст;
+                    if (friendstatus.CompareTo("@") == 0)
+                    {
+                        // добавляем пользователя с его новыми данными с пустым статусом
+                        User.ListFriends.Add(new Friend() { name = s, status = "", date = PublicData.DateSearch(data[2]), distance = PublicData.latlng2distance(User.Latitude, User.Longitude, lat, lng), ImagePath = "http://109.120.164.212/photos/" + s + ".jpg" + "?" + Guid.NewGuid().ToString() });
+                    }
+                    // если статус не пустой
                     else
                     {
-                        // смена флага
-                        flag = false;
+                        // добавляем пользователя со всеми его новыми данными
+                        User.ListFriends.Add(new Friend() { name = s, status = friendstatus, date = PublicData.DateSearch(data[2]), distance = PublicData.latlng2distance(User.Latitude, User.Longitude, lat, lng), ImagePath = "http://109.120.164.212/photos/" + s + ".jpg" + "?" + Guid.NewGuid().ToString() });
                     }
                 }
             }
-            list1.DataContext = PublicData.p1;
-            client.Close();
-        }
 
+   
+
+            User.ListPotential = new List<Potential>();                                                    // создаём список друзей
+            string potentialfriends = request.GetListPotential(User.Name, User.Password);
+            string[] potential = potentialfriends.Split(new Char[] { '/' });                    // выдёргиваем из ответа строки между разделителями
+
+            // в цикле заполняем список друзей
+            foreach (string s in potential)
+            {
+                // если строка не пустая
+                if (s.Trim() != "")
+                {
+                    list_potential.DataContext = User.ListPotential;
+                     User.ListPotential.Add(new Potential() { name = s, ImagePath = "http://109.120.164.212/photos/" + s + ".jpg" + "?" + Guid.NewGuid().ToString() });
+                }
+            }
+            list_potential.DataContext = User.ListPotential;
+        }
+        
         // Функции к галерее и фотику
         //*********************************************************************************
         void photoChooserTask_Comp(object sender, PhotoResult e)
@@ -125,7 +129,6 @@ namespace EnterPage
                 photo = e.OriginalFileName;
             }
         }
-
         void cameraCaptureTask_Comp(object sender, PhotoResult e)
         {
 
@@ -138,17 +141,7 @@ namespace EnterPage
                 photo = e.OriginalFileName;
             }
         }
-
-        private void Refresh()
-        {
-            NavigationService.Navigate(new Uri("/ActionPage.xaml?" + DateTime.Now.Ticks, UriKind.Relative));
-        }
-
         public EventHandler<PhotoResult> photoChooserTask_Completed { get; set; }
-
-        //*******************************************************************************
-        //Действия пользователя
-        //********************************************************************************
         private void Camera_Click(object sender, System.Windows.Input.GestureEventArgs e)
         {
             cameraCaptureTask.Show();
@@ -157,20 +150,119 @@ namespace EnterPage
         {
             photoChooserTask.Show();
         }
+        //********************************************************************
+
         private void Delete_Click(object sender, System.Windows.Input.GestureEventArgs e)
         {
             BitmapImage bm = new BitmapImage(new Uri("/Resources/no_photo.jpg", UriKind.RelativeOrAbsolute));
             MyPhoto.Source = bm;
 
             SocketClient photoclient = new SocketClient();
-
-            string rez = photoclient.Connect(PublicData.IP, 5000);
-
-            photoclient.SendFile(bm, PublicData.Username.ToLower() + ".jpg");
+            string rez = photoclient.Connect(request.GetIP(), 5000);
+            photoclient.SendFile(bm, User.Name.ToLower() + ".jpg");
             photoclient.Close();
         }
-        
-        private void Exit_Tap(object sender, System.Windows.Input.GestureEventArgs e)
+        private void PhoneApplicationPage_BackKeyPress(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            e.Cancel = true;
+            Task.Delay(100);
+            if (MessageBox.Show("Вы хотите покинуть приложение?", "Выход", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
+            {
+                IsolatedStorageSettings.ApplicationSettings.Save();
+                Application.Current.Terminate();
+            }
+        }
+        private void add_friend_Tap(object sender, System.Windows.Input.GestureEventArgs e)
+        {
+            this.Focus();
+            int value = request.AddFriend(User.Name, User.Password, Friend_box.Text.ToLower());
+
+            if (value != 0)
+            {
+                MessageBox.Show("Пользователь не найден");
+            }
+            else
+            {
+                MessageBox.Show("Пользователю с ником: " + Friend_box.Text.ToLower() + "отослана заявка в друзья");
+            }
+
+            this.Friend_box.Text = "";
+            this.Refresh();
+        }
+        private void SetStatus_Tap(object sender, System.Windows.Input.GestureEventArgs e)
+        {
+            int value = request.SetStatus(User.Name, User.Password, status.Text);
+            if (value == 0)
+            {
+                MessageBox.Show("Статус успешно изменён");
+            }
+            else
+            {
+                MessageBox.Show("Не удалось изменить статус");
+            }
+
+            status.Text = "";
+        }
+        private void Follow_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationService.Navigate(new Uri("/FollowPage.xaml", UriKind.Relative));
+        }
+        private void Remove_Click(object sender, RoutedEventArgs e)
+        {
+            int value = request.DeleteFriend(User.Name, User.Password, PublicData.Search_friend);
+
+            if (value != 0)
+            {
+                MessageBox.Show("Пользователь не найден");
+            }
+            else
+            {
+                MessageBox.Show("Пользователю с ником: " + PublicData.Search_friend + "успешно удалён из друзей");
+            }
+
+            this.Focus();
+            this.Refresh();
+        }
+        private void Profile_panel_Tap(object sender, System.Windows.Input.GestureEventArgs e)
+        {
+           object wantedNode = ((StackPanel)sender).FindName("name");
+           if (wantedNode is TextBlock)
+           {
+               TextBlock wantedChild = wantedNode as TextBlock;
+               PublicData.Search_friend = wantedChild.Text;
+               NavigationService.Navigate(new Uri("/Follow_page.xaml", UriKind.Relative));
+           }
+            
+        }
+        private void Profile_panel_Hold(object sender, System.Windows.Input.GestureEventArgs e)
+        {
+            object wantedNode = ((StackPanel)sender).FindName("name");
+            if (wantedNode is TextBlock)
+            {
+                TextBlock wantedChild = wantedNode as TextBlock;
+                PublicData.Search_friend = wantedChild.Text;
+            }
+        }
+        private void Load_Tap(object sender, System.Windows.Input.GestureEventArgs e)
+        {
+            if (String.IsNullOrWhiteSpace(photo))
+            {
+                MessageBox.Show("Загрузка фотографии не требуется, так как Вы не изменяли её");
+            }
+            else
+            {
+                SocketClient client = new SocketClient();                          //
+                string rez = client.Connect(request.GetIP(), 5000);
+                client.SendFile(photo, User.Name.ToLower() + ".jpg");
+                client.Close();
+                MessageBox.Show("Фотография загружена на сервер");
+            }
+        }
+        private void ClickRefresh(object sender, EventArgs e)
+        {
+            Refresh();
+        }
+        private void Exit_Tap(object sender, EventArgs e)
         {
             using (var appStorage = IsolatedStorageFile.GetUserStoreForApplication())
             {
@@ -185,126 +277,20 @@ namespace EnterPage
             }
             NavigationService.Navigate(new Uri("/MainPage.xaml", UriKind.Relative));
         }
-        
-        private void PhoneApplicationPage_BackKeyPress(object sender, System.ComponentModel.CancelEventArgs e)
+        private void Add_Click(object sender, RoutedEventArgs e)
         {
-            e.Cancel = true;
-            Task.Delay(100);
-            if (MessageBox.Show("Вы хотите покинуть приложение?", "Выход", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
-            {
-                //IsolatedStorageSettings.ApplicationSettings.Save();
-                Application.Current.Terminate();
-            }
-        }
-        //********************************************************************
-        //Добавление друга
-        private void add_friend_Tap(object sender, System.Windows.Input.GestureEventArgs e)
-        {
-            this.Focus();
-            SocketClient client = new SocketClient();
-            string rez = client.Connect(PublicData.IP, PublicData.PORT);
+            int value = request.AddFriend(User.Name, User.Password, PublicData.Search_friend);
 
-            if (!rez.Contains("Success"))
-            {
-                MessageBox.Show("Неудаётся подключиться к серверу\nВозможно отсутствует подключение к интернету");
-                client.Close();
-                return;
-            }
-            client.Send("<af/" + PublicData.Username.ToLower() + "/" + PublicData.Password + "/" + Friend_box.Text.ToLower() + ">");
-            string result = client.Receive();
-            if (result.Contains("<af/bad>"))
+            if (value != 0)
             {
                 MessageBox.Show("Пользователь не найден");
             }
-            client.Close();
-
-            this.Friend_box.Text = "";
-            this.Refresh();
-        }
-        //Статус
-        private void Image_Tap(object sender, System.Windows.Input.GestureEventArgs e)
-        {
-            SocketClient client = new SocketClient();
-            string rez = client.Connect(PublicData.IP, PublicData.PORT);
-
-            if (!rez.Contains("Success"))
-            {
-                MessageBox.Show("Неудаётся подключиться к серверу\nВозможно отсутствует подключение к интернету");
-                client.Close();
-                return;
-            }
-            client.Send("<ss/" + PublicData.Username.ToLower() + "/" + PublicData.Password + "/" + status.Text + ">");
-            string result = client.Receive();
-            if (result.Contains("<ss/bad>"))
-            {
-                MessageBox.Show("Статус может содержать не более 256 символов");
-            }
-
-            client.Close();
-        }
-
-        
-
-        // Метод для вывода верной формы существительного, по склонению
-
-
-        private void Follow_Click(object sender, RoutedEventArgs e)
-        {
-            NavigationService.Navigate(new Uri("/Follow_page.xaml", UriKind.Relative));
-        }
-
-
-        private void Remove_Click(object sender, RoutedEventArgs e)
-        {
-            SocketClient client = new SocketClient();                                              // создаём сокет
-            string rez = client.Connect(PublicData.IP, PublicData.PORT);                           // подключаемся к серверу
-            client.Send("<df/" + PublicData.Username + "/" + PublicData.Password + "/" +PublicData.Search_friend + ">");                                             // запрос на получение других данных пользователя
-            string result = client.Receive();                                                 // получение ответа сервера
-            client.Close();
-
-            this.Focus();
-            this.Refresh();
-        }
-
-
-        private void Profile_panel_Tap(object sender, System.Windows.Input.GestureEventArgs e)
-        {
-           object wantedNode = ((StackPanel)sender).FindName("name");
-           if (wantedNode is TextBlock)
-           {
-               TextBlock wantedChild = wantedNode as TextBlock;
-               PublicData.Search_friend = wantedChild.Text;
-               NavigationService.Navigate(new Uri("/Follow_page.xaml", UriKind.Relative));
-           }
-            
-        }
-
-        private void Profile_panel_Hold(object sender, System.Windows.Input.GestureEventArgs e)
-        {
-            object wantedNode = ((StackPanel)sender).FindName("name");
-            if (wantedNode is TextBlock)
-            {
-                TextBlock wantedChild = wantedNode as TextBlock;
-                PublicData.Search_friend = wantedChild.Text;
-            }
-        }
-
-        private void Load_Tap(object sender, System.Windows.Input.GestureEventArgs e)
-        {
-            if (String.IsNullOrWhiteSpace(photo))
-            {
-                MessageBox.Show("Загрузка фотографии не требуется, так как Вы не изменяли её");
-            }
             else
             {
-                SocketClient client = new SocketClient();                          //
-
-                string rez = client.Connect(PublicData.IP, 5000);
-
-                client.SendFile(photo, PublicData.Username.ToLower() + ".jpg");
-                client.Close();
-                MessageBox.Show("Фотография загружена на сервер");
+                MessageBox.Show("Пользователю с ником: " + Friend_box.Text.ToLower() + "отослана заявка в друзья");
             }
+
+            this.Refresh();
         }
     }
 }

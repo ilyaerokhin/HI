@@ -10,10 +10,10 @@
     xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
     FontFamily="{StaticResource PhoneFontFamilyNormal}"
     FontSize="{StaticResource PhoneFontSizeNormal}"
-    Foreground="{StaticResource PhoneForegroundBrush}"
     SupportedOrientations="Portrait"  Orientation="Portrait"
-    shell:SystemTray.IsVisible="True" BackKeyPress="PhoneApplicationPage_BackKeyPress" Loaded="PhoneApplicationPage_Loaded">
+    shell:SystemTray.IsVisible="True" BackKeyPress="PhoneApplicationPage_BackKeyPress" Loaded="PhoneApplicationPage_Loaded" Foreground="White">
 
+    
     <!--LayoutRoot представляет корневую сетку, где размещается все содержимое страницы-->
     <Grid x:Name="LayoutRoot" Background="#FFE5B4">
         <Grid.ColumnDefinitions>
@@ -35,15 +35,15 @@
                 <CompositeTransform/>
             </phone:Pivot.RenderTransform>
             <!--Первый элемент Pivot-->
-            <phone:PivotItem Header="ДРУЗЬЯ" Margin="12,28,12,-18" FontWeight="Bold">
+            <phone:PivotItem Header="ДРУЗЬЯ" Margin="12,10,12,-18" FontWeight="Bold">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition/>
                         <ColumnDefinition Width="0*"/>
                     </Grid.ColumnDefinitions>
-                    <StackPanel Orientation="Horizontal" Margin="-7,0,0,526">
-                        <Image Height="50" Width="50" Source="/Resources/add.png" Margin="12,0,9,0" Tap="add_friend_Tap"/>
-                        <TextBox x:Name="Friend_box" Margin="-5,-6,0,-9" TextWrapping="Wrap" VerticalAlignment="Top" Width="399" BorderBrush="#BFDADADA"/>
+                    <StackPanel Orientation="Horizontal" Margin="-7,-20,0,546">
+                        <Image Height="50" Width="50" Source="/Resources/add.png" Margin="12,11,9,17" Tap="add_friend_Tap"/>
+                        <TextBox x:Name="Friend_box" Margin="-5,4,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="392" BorderBrush="#BFDADADA" Height="70"/>
                     </StackPanel>
                     <ListBox x:Name="list1" Margin="0,60,0,0"  ItemsSource="{Binding}">
                         <ListBox.ItemTemplate>
@@ -72,60 +72,108 @@
             </phone:PivotItem>
 
             <!--Второй элемент Pivot-->
-            <phone:PivotItem Header="ПРОФИЛЬ" Margin="10,28,12,-16" FontWeight="Bold">
+            <phone:PivotItem Header="ПРОФИЛЬ" Margin="10,28,12,-18" FontWeight="Bold">
                 <Grid Background="#FFE5B4">
                     <!--Added background image and text content.-->
                     <Border
                     BorderBrush="{StaticResource PhoneForegroundBrush}"
-                    BorderThickness="{StaticResource PhoneBorderThickness}" Margin="-2,10,213,325">
+                    BorderThickness="{StaticResource PhoneBorderThickness}" Margin="-2,10,213,334">
                         <Grid>
                             <Image Name="MyPhoto" Source="/Resources/no_photo.jpg" />
                         </Grid>
                     </Border>
 
-                    <ListBox Margin="250,10,0,325">
+                    <ListBox Margin="250,10,0,322">
 
                         <StackPanel x:Name="Camera" Orientation="Horizontal" Margin="0,0,0,15" Height="50" Tap="Camera_Click">
                             <Image Height="50" Width="50" Margin="0,0,0,0" Source="/Resources/camera.png"/>
-                            <StackPanel Width="200">
-                                <TextBlock Text="снять фото" TextWrapping="Wrap" Margin="10,12,31,0" Style="{StaticResource PhoneTextSubtleStyle}" Height="37" FontSize="28" Foreground="#FF80461B" FontWeight="Normal" FontFamily="Segoe WPSegoe WP SemiLight"/>
+                            <StackPanel Width="158">
+                                <TextBlock Text="снять фото" TextWrapping="Wrap" Margin="10,12,0,0" Style="{StaticResource PhoneTextSubtleStyle}" Height="37" FontSize="28" Foreground="#FF80461B" FontWeight="Normal" FontFamily="Segoe WPSegoe WP SemiLight"/>
                             </StackPanel>
                         </StackPanel>
 
                         <StackPanel x:Name="Galery" Orientation="Horizontal" Margin="0,0,0,15" Height="50" Tap="Galery_Click">
                             <Image x:Name="cam" Height="50" Width="50" Source="/Resources/folder.png" Margin="0,0,0,0"/>
-                            <StackPanel Width="200">
-                                <TextBlock Text="галерея" TextWrapping="Wrap" Margin="10,12,43,0" Style="{StaticResource PhoneTextSubtleStyle}" Height="37" FontSize="28" Foreground="#FF80461B" FontWeight="Normal" FontFamily="Segoe WPSegoe WP SemiLight"/>
+                            <StackPanel Width="158">
+                                <TextBlock Text="галерея" TextWrapping="Wrap" Margin="10,12,0,0" Style="{StaticResource PhoneTextSubtleStyle}" Height="37" FontSize="28" Foreground="#FF80461B" FontWeight="Normal" FontFamily="Segoe WPSegoe WP SemiLight"/>
                             </StackPanel>
                         </StackPanel>
 
                         <StackPanel x:Name="Delete" Orientation="Horizontal" Margin="0,0,0,15" Height="50" Tap="Delete_Click">
                             <Image Height="50" Width="50" Source="/Resources/delete.png" Margin="0,0,0,0"/>
-                            <StackPanel Width="200">
-                                <TextBlock Text="удалить" TextWrapping="Wrap" Margin="10,10,43,0" Style="{StaticResource PhoneTextSubtleStyle}" Height="37" FontSize="28" Foreground="#FF80461B" FontWeight="Normal" FontFamily="Segoe WPSegoe WP SemiLight"/>
+                            <StackPanel Width="158">
+                                <TextBlock Text="удалить" TextWrapping="Wrap" Margin="10,10,0,0" Style="{StaticResource PhoneTextSubtleStyle}" Height="37" FontSize="28" Foreground="#FF80461B" FontWeight="Normal" FontFamily="Segoe WPSegoe WP SemiLight"/>
                             </StackPanel>
                         </StackPanel>
 
                         <StackPanel x:Name="Load" Orientation="Horizontal" Margin="0,0,0,15" Height="50" Tap="Load_Tap">
                             <Image Height="50" Width="50" Source="/Resources/send photo.png" Margin="0,0,0,0"/>
-                            <StackPanel Width="200">
-                                <TextBlock Text="загрузить" TextWrapping="Wrap" Margin="10,10,43,0" Style="{StaticResource PhoneTextSubtleStyle}" Height="37" FontSize="28" Foreground="#FF80461B" FontWeight="Normal" FontFamily="Segoe WPSegoe WP SemiLight"/>
+                            <StackPanel Width="158">
+                                <TextBlock Text="загрузить" TextWrapping="Wrap" Margin="10,10,0,0" Style="{StaticResource PhoneTextSubtleStyle}" Height="37" FontSize="28" Foreground="#FF80461B" FontWeight="Normal" FontFamily="Segoe WPSegoe WP SemiLight"/>
                             </StackPanel>
                         </StackPanel>
 
                     </ListBox>
 
-                    <TextBlock Text="Статус" Margin="14,299,82,242" FontSize="28" Style="{StaticResource PhoneTextExtraLargeStyle}" FontWeight="Normal" FontFamily="Segoe WPSegoe WP SemiLight" Foreground="#FF80461B"/>
-                    <Image Source="/Resources/edit.png" Margin="397,348,11,186" Height="50" Width="50" RenderTransformOrigin="0.06,0.606" Tap="Image_Tap"/>
+                    <TextBlock Text="Статус" Margin="14,277,82,264" FontSize="28" Style="{StaticResource PhoneTextExtraLargeStyle}" FontWeight="Normal" FontFamily="Segoe WPSegoe WP SemiLight" Foreground="#FF80461B"/>
+                    <Image Source="/Resources/edit.png" Margin="396,314,11,208" RenderTransformOrigin="0.501,0.528" Tap="SetStatus_Tap"/>
 
-                    <StackPanel x:Name="Exit" Orientation="Horizontal" Margin="0,0,293,20" VerticalAlignment="Bottom" Height="60" Tap="Exit_Tap">
-                        <Image Source="/Resources/cancel.png" Margin="14,0,0,5" Width="50" HorizontalAlignment="Left" Height="50" VerticalAlignment="Bottom"/>
-                        <TextBlock Text="Выход" Margin="10,0,0,11" HorizontalAlignment="Left" VerticalAlignment="Bottom" FontSize="28" Foreground="#FF80461B" FontFamily="Segoe WPSegoe WP SemiLight" FontWeight="Normal"/>
-                    </StackPanel>
-                    <TextBox x:Name="status" Margin="-2,338,61,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="399" BorderBrush="#BFDADADA"/>
+                    <TextBox x:Name="status" Margin="-2,310,61,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="399" BorderBrush="#BFDADADA" MaxLength="25"/>
+                </Grid>
+            </phone:PivotItem>
+
+            <!--Третий элемент Pivot-->
+            <phone:PivotItem Header="ЗАЯВКИ" Margin="12,10,12,-18" FontWeight="Bold">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="0*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <ListBox x:Name="list_potential"  ItemsSource="{Binding}">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel x:Name="Potential_panel" Orientation="Horizontal" Margin="0,0,0,17" Tap="Profile_panel_Tap" Hold="Profile_panel_Hold">
+                                    <Image Height="100" Width="100" Source="{Binding ImagePath}" Margin="12,0,9,0"/>
+                                    <StackPanel x:Name="Child" Height="100"  Width="311" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" >
+                                        <TextBlock x:Name="name" Text="{Binding name}" TextWrapping="Wrap" Style="{StaticResource PhoneTextExtraLargeStyle}" FontFamily="Segoe WP" FontSize="35" Foreground="#FF80461B" HorizontalAlignment="Left" VerticalAlignment="Center" />
+                                    </StackPanel>
+                                    <toolkit:ContextMenuService.ContextMenu  >
+                                        <toolkit:ContextMenu>
+                                            <toolkit:MenuItem x:Name="Add" Header="Добавить" Click="Add_Click"/>
+                                            <toolkit:MenuItem x:Name="Delete" Header="Отклонить" Click="Remove_Click"/>
+                                        </toolkit:ContextMenu>
+                                    </toolkit:ContextMenuService.ContextMenu>
+                                </StackPanel>
+
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+
                 </Grid>
             </phone:PivotItem>
         </phone:Pivot>
     </Grid>
+
+
+    <phone:PhoneApplicationPage.ApplicationBar>
+        <shell:ApplicationBar IsVisible="True" IsMenuEnabled="True" Opacity="0.5"  Mode="Default">
+                <shell:ApplicationBarIconButton IconUri="/Resources/Refresh.png" Text="Обновить" Click="ClickRefresh"/>
+                <shell:ApplicationBarIconButton IconUri="/Resources/Exit.png" Text="Выйти" Click="Exit_Tap"/>
+        </shell:ApplicationBar>
+    </phone:PhoneApplicationPage.ApplicationBar>
+
+    <!--<phone:PhoneApplicationPage.Resources>
+
+    <shell:ApplicationBar x:Key="GlobalAppBar" IsVisible="True" IsMenuEnabled="True">
+        <shell:ApplicationBarIconButton IconUri="/Images/appbar_button1.png" Text="Button 1" Click="Button1_Click" />
+        <shell:ApplicationBarIconButton IconUri="/Images/appbar_button2.png" Text="Button 2" Click="Button2_Click" />
+        <shell:ApplicationBar.MenuItems>
+            <shell:ApplicationBarMenuItem Text="MenuItem 1" Click="MenuItem1_Click" />
+            <shell:ApplicationBarMenuItem Text="MenuItem 2" Click="MenuItem2_Click" />
+        </shell:ApplicationBar.MenuItems>
+    </shell:ApplicationBar>
+
+</phone:PhoneApplicationPage.Resources>-->
 
 </phone:PhoneApplicationPage>

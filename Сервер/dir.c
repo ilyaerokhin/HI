@@ -15,12 +15,18 @@ int DeleteFriend(char *path, char *user, char *password, char *userfriend)
 {
 	char mydir[strlen(path)+strlen(user)+20];
 	char frienddir[strlen(path)+strlen(userfriend)+20];
+	char mydir_1[strlen(path)+strlen(user)+20];
+	char frienddir_1[strlen(path)+strlen(userfriend)+20];
 	char mypassword[MAXSIZEPASSWORD];
 
 	strcpy(mydir,path);
 	strcat(mydir,"/");
 	strcat(mydir,user);
 	int a = access(mydir, 0);
+
+	strcpy(mydir_1,path);
+	strcat(mydir_1,"/");
+	strcat(mydir_1,user);
 
 	if(a!=0)
 	{
@@ -31,6 +37,10 @@ int DeleteFriend(char *path, char *user, char *password, char *userfriend)
 	strcat(frienddir,"/");
 	strcat(frienddir,userfriend);
 	a = access(frienddir, 0);
+
+	strcpy(frienddir_1,path);
+	strcat(frienddir_1,"/");
+	strcat(frienddir_1,userfriend);
 
 	if(a!=0)
 	{
@@ -96,6 +106,58 @@ int DeleteFriend(char *path, char *user, char *password, char *userfriend)
 		}
 	}
 	Write(path, userfriend, text2, 5);
+
+	char text3[900];
+	strcat(mydir_1,"/potential.txt");
+
+	FILE *f3 = fopen(mydir_1,"r");
+
+	strcpy(text3,"");
+
+	while(1)
+	{
+		estr = fgets(newtext,sizeof(newtext),f3);
+		newtext[strlen(newtext)-1] = '\0';
+
+		if(!estr)
+		{
+			fclose(f3);
+			break;
+		}
+		int c = strcmp(newtext,userfriend);
+		if(c!=0)
+		{
+			strcat(text3,newtext);
+			strcat(text3,"\n");
+		}
+	}
+	Write(path, user, text3, 7);
+
+	char text4[900];
+	strcat(frienddir_1,"/potential.txt");
+
+	FILE *f4 = fopen(frienddir_1,"r");
+
+	strcpy(text4,"");
+
+	while(1)
+	{
+		estr = fgets(newtext,sizeof(newtext),f4);
+		newtext[strlen(newtext)-1] = '\0';
+
+		if(!estr)
+		{
+			fclose(f4);
+			break;
+		}
+		int c = strcmp(newtext,userfriend);
+		if(c!=0)
+		{
+			strcat(text4,newtext);
+			strcat(text4,"\n");
+		}
+	}
+	Write(path, user, text4, 7);
 	return 0;
 }
 
@@ -126,11 +188,67 @@ void Write(char *path, char *user, char *text, int flag)
 		case 6: 
 			strcat(dir,"/status.txt");
 			break;
+		case 7: 
+			strcat(dir,"/potential.txt");
+			break;
 	}	
 
 	FILE *file = fopen(dir,"w");
 	fprintf(file,"%s",text);
 	fclose(file);
+}
+
+int ListPotential(char *path, char *user, char *password, char *friends)
+{
+	char dir[strlen(path)+strlen(user)+20];
+	char mypassword[MAXSIZEPASSWORD];
+	
+	strcpy(dir,path);
+	strcat(dir,"/");
+	strcat(dir,user);
+	int a = access(dir, 0);
+
+	if(a!=0)
+	{
+		return 1;
+	}
+
+	Read(path, user, mypassword, 3);
+	int c = strcmp(mypassword,password);
+	if(c!=0)
+	{
+		return 2;
+	}
+	
+	strcat(dir,"/potential.txt");
+
+	FILE *f = fopen(dir,"r");
+	char *estr;
+	char newtext[MAXSIZENAME];
+	strcpy(friends,"");
+
+	estr = fgets(newtext,sizeof(newtext),f);
+	newtext[strlen(newtext)-1] = '\0';
+	if(!estr)
+	{
+		return 0;
+	}
+
+	strcat(friends,newtext);
+
+	while(1)
+	{
+		estr = fgets(newtext,sizeof(newtext),f);
+		newtext[strlen(newtext)-1] = '\0';
+		if(!estr)
+		{
+			fclose(f);
+			return 0;
+		}
+		strcat(friends,"|");
+		strcat(friends,newtext);
+	}
+	fclose(f);
 }
 
 int ListFriends(char *path, char *user, char *password, char *friends)
@@ -184,13 +302,12 @@ int ListFriends(char *path, char *user, char *password, char *friends)
 		strcat(friends,newtext);
 	}
 	fclose(f);
-
-
 }
 
 int AddFriend(char *path, char *user, char *password, char *userfriend)
 {
 	char mydir[strlen(path)+strlen(user)+20];
+	char mydir_1[strlen(path)+strlen(user)+20];
 	char frienddir[strlen(path)+strlen(userfriend)+20];
 	char mypassword[MAXSIZEPASSWORD];
 
@@ -198,6 +315,10 @@ int AddFriend(char *path, char *user, char *password, char *userfriend)
 	strcat(mydir,"/");
 	strcat(mydir,user);
 	int a = access(mydir, 0);
+
+	strcpy(mydir_1,path);
+	strcat(mydir_1,"/");
+	strcat(mydir_1,user);
 
 	if(a!=0)
 	{
@@ -227,18 +348,66 @@ int AddFriend(char *path, char *user, char *password, char *userfriend)
 		return 4;
 	}
 
-	strcat(mydir,"/friends.txt");
-	strcat(frienddir,"/friends.txt");
+	l = isHere(path, userfriend, "potential.txt", user);
+	if(l==0)
+	{
+		return 5;
+	}
+	
+	l = isHere(path, user, "potential.txt", userfriend);
 
-	FILE *file1 = fopen(mydir,"a");
-	fprintf(file1,"%s\n",userfriend);
-	fclose(file1);
+	if(l==0)
+	{
+		strcat(mydir,"/friends.txt");
+		strcat(frienddir,"/friends.txt");
 
-	FILE *file = fopen(frienddir,"a");
-	fprintf(file,"%s\n",user);
-	fclose(file);
+		FILE *file1 = fopen(mydir,"a");
+		fprintf(file1,"%s\n",userfriend);
+		fclose(file1);
 
-	return 0;
+		FILE *file = fopen(frienddir,"a");
+		fprintf(file,"%s\n",user);
+		fclose(file);
+	
+		char text[900];
+		strcat(mydir_1,"/potential.txt");
+
+		FILE *f = fopen(mydir_1,"r");
+		char *estr;
+		char newtext[MAXSIZENAME];
+		strcpy(text,"");
+
+		while(1)
+		{
+			estr = fgets(newtext,sizeof(newtext),f);
+			newtext[strlen(newtext)-1] = '\0';
+
+			if(!estr)
+			{
+				fclose(f);
+				break;
+			}
+			int c = strcmp(newtext,userfriend);
+			if(c!=0)
+			{
+				strcat(text,newtext);
+				strcat(text,"\n");
+			}
+		}
+		Write(path, user, text, 7);
+
+		return 0;
+	}
+	else
+	{
+		strcat(frienddir,"/potential.txt");
+
+		FILE *file = fopen(frienddir,"a");
+		fprintf(file,"%s\n",user);
+		fclose(file);
+
+		return 0;
+	}
 }
 
 int AddUser(char *path, char *user, char *password, char *email)
@@ -260,6 +429,7 @@ int AddUser(char *path, char *user, char *password, char *email)
 		Write(path, user, text, 5);
 		char *status = "@";
 		Write(path, user, status, 6);
+		Write(path, user, text, 7);
 		return 0; 
 	}
 	else
@@ -385,6 +555,9 @@ void Read(char *path, char *user, char *text, int flag)
 			break;
 		case 6: 
 			strcat(dir,"/status.txt");
+			break;
+		case 7: 
+			strcat(dir,"/potential.txt");
 			break;
 	}
 	
@@ -580,6 +753,10 @@ int first2(char * str)
    	{
       		return 10;
    	}
+	if((str[0]=='<') && (str[1]=='l') && (str[2]=='p') && (str[3]=='/'))
+   	{
+      		return 11;
+   	}
 	return 0;
 }
 
@@ -687,11 +864,11 @@ void DO(char *str, char *request)
 		int n = AddFriend(path, user, password, userfriend);
 		if(n == 0)
 		{
-			sprintf(request, "<af/ok/%s>\0",userfriend);	
+			sprintf(request, "<af/ok>\0");	
 		}
 		if(n == 1 || n == 2 || n == 3 || n == 4)
 		{ 
-			sprintf(request, "<af/bad/%s>\0",userfriend);	
+			sprintf(request, "<af/bad>\0");	
 		}
 	}
 	if(m == 6)
@@ -779,5 +956,25 @@ void DO(char *str, char *request)
 			sprintf(request, "<gp/bad>\0");
 		}
 		
+	}
+	if(m == 11)
+	{
+		pars_2(str,user,password);
+		char friends[900];
+		int n = ListPotential(path, user, password, friends);
+		switch(n)
+        	{
+        	case 0:
+			sprintf(request, "<lp/%s>\0",friends);
+			break;
+		case 1:
+			sprintf(request, "<lp/not>\0");
+			break;
+		case 2:
+			sprintf(request, "<lp/bad>\0");
+			break;
+		default:
+			break;
+		}
 	}
 }

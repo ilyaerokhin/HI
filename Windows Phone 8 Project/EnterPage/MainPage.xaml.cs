@@ -17,30 +17,30 @@ namespace EnterPage
 {
     public partial class MainPage : PhoneApplicationPage
     {
+        Requests request;
         public MainPage()
         {
             InitializeComponent();
-        }
+            request = new Requests();
 
+            if(request.isConnecting() == false)
+            {
+                MessageBox.Show("Неудаётся подключиться к серверу\nВозможно отсутствует подключение к интернету");
+                IsolatedStorageSettings.ApplicationSettings.Save();
+                Application.Current.Terminate();
+            }
+        }
+        private void Refresh()
+        {
+            NavigationService.Navigate(new Uri("/MainPage.xaml?" + DateTime.Now.Ticks, UriKind.Relative));
+        }
         private void EnterButton_Click(object sender, RoutedEventArgs e)
         {
             if (ValidateUsername() && ValidatePassword())
             {
-                SocketClient client = new SocketClient();
-                string rez = client.Connect(PublicData.IP, PublicData.PORT);
+                int value = request.CheckUser(Username.Text, Password.Password);
 
-                if (!rez.Contains("Success"))
-                {
-                    MessageBox.Show("Неудаётся подключиться к серверу\nВозможно отсутствует подключение к интернету");
-                    client.Close();
-                    return;
-                }
-
-                client.Send("<cu/" + Username.Text.ToLower() + "/" + Password.Password + ">");
-                string result = client.Receive();
-                client.Close();
-
-                if (result.Contains("<cu/ok>"))
+                if (value == 0)
                 {
                     using (var appStorage = IsolatedStorageFile.GetUserStoreForApplication())
                     {
@@ -53,25 +53,31 @@ namespace EnterPage
                             }
                         }
                     }
-                    PublicData.Username = Username.Text.ToLower();
-                    PublicData.Password = Password.Password;
+                    User.Name = Username.Text.ToLower();
+                    User.Password = Password.Password;
 
                     while (SetCoordinates() != 0) ;
                     NavigationService.Navigate(new Uri("/ActionPage.xaml", UriKind.Relative));
                 }
 
-                if (result.Contains("<cu/not>"))
+                if (value == 1)
                 {
                     MessageBox.Show("Неверное имя пользователя");
                     Username.Text = string.Empty;
                     Password.Password = string.Empty;
                 }
 
-                if (result.Contains("<cu/bad>"))
+                if (value == 2)
                 {
                     MessageBox.Show("Неверный пароль");
                     Username.Text = string.Empty;
                     Password.Password = string.Empty;
+                }
+
+                if (value < 0)
+                {
+                    MessageBox.Show("Попробуй ещё раз");
+                    Refresh();
                 }
 
             }
@@ -81,7 +87,6 @@ namespace EnterPage
                 Password.Password = string.Empty;
             }
         }
-
         private bool ValidateUsername()
         {
             if (String.IsNullOrWhiteSpace(Username.Text))
@@ -92,7 +97,6 @@ namespace EnterPage
 
             return true;
         }
-
         private bool ValidatePassword()
         {
             if (String.IsNullOrWhiteSpace(Password.Password))
@@ -103,12 +107,6 @@ namespace EnterPage
 
             return true;
         }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            NavigationService.Navigate(new Uri("/RegPage.xaml", UriKind.Relative));
-        }
-
         private void PhoneApplicationPage_BackKeyPress(object sender, System.ComponentModel.CancelEventArgs e)
         {
             e.Cancel = true;
@@ -119,7 +117,6 @@ namespace EnterPage
                 Application.Current.Terminate();
             }
         }
-
         private int SetCoordinates()
         {
             GeoCoordinateWatcher watcher = new GeoCoordinateWatcher();  //
@@ -129,26 +126,14 @@ namespace EnterPage
             // если координаты известны
             if (coord.IsUnknown != true)
             {
-                PublicData.Latitude = coord.Latitude;                   // Сохраняем широту
-                PublicData.Longitude = coord.Longitude;                 // Сохраняем долготу
-
-                SocketClient client = new SocketClient();               //
-                string rez = client.Connect(PublicData.IP, PublicData.PORT);                  // СОЕДИНЯЕМСЯ С СЕРВЕРОМ
-                //
-                //если неуспех, то выходим
-                if (!rez.Contains("Success"))
+                User.Latitude = coord.Latitude;                   // Сохраняем широту
+                User.Longitude = coord.Longitude;                 // Сохраняем долготу
+                int value = request.SetCoordinates(User.Name,User.Latitude,User.Longitude);
+                if (value != 0)
                 {
-                    client.Close();
-                    return 1;
+                    MessageBox.Show("Ошибка при старте, попробуйте войти ещё раз");
+                    Refresh();
                 }
-
-                // отправляем на сервер запрос с координатами пользователя
-                // структура запроса: <uc/username/широта/долгота>
-                // подробнее в документации по запросам
-
-                client.Send("<uc/" + PublicData.Username.ToLower() + "/" + coord.Latitude + "/" + coord.Longitude + ">"); // отправка запроса
-                string result = client.Receive();                       // получаем ответ от сервера
-                client.Close();                                         // закрываем соединение
                 watcher.Stop();
             }
             else
@@ -156,7 +141,10 @@ namespace EnterPage
                 return 1;
             }
             return 0;
-            //NotifyComplete();                                           // что-то нужное
+        }
+        private void RegButton_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationService.Navigate(new Uri("/RegPage.xaml", UriKind.Relative));
         }
     }
 }

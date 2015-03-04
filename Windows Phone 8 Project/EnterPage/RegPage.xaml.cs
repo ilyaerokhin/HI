@@ -18,17 +18,28 @@ namespace EnterPage
 {
     public partial class RegPage : PhoneApplicationPage
     {
-
+        Requests request;
         public RegPage()
         {
             InitializeComponent();
-        }
+            request = new Requests();
 
+            if (request.isConnecting() == false)
+            {
+                MessageBox.Show("Неудаётся подключиться к серверу\nВозможно отсутствует подключение к интернету");
+                IsolatedStorageSettings.ApplicationSettings.Save();
+                Application.Current.Terminate();
+            }
+        }
+        private void Refresh()
+        {
+            NavigationService.Navigate(new Uri("/RegPage.xaml?" + DateTime.Now.Ticks, UriKind.Relative));
+        }
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             if (ValidateUsername() && ValidatePassword() && ValidateEmail())
             {
-                if (!IsValidEmail(Email.Text))
+                if (!PublicData.IsValidEmail(Email.Text))
                 {
                     MessageBox.Show("Некорректный E-mail");
                     Username.Text = string.Empty;
@@ -36,20 +47,10 @@ namespace EnterPage
                     Email.Text = string.Empty;
                     return;
                 }
-                SocketClient client = new SocketClient();
-                string rez = client.Connect(PublicData.IP, PublicData.PORT);
 
-                if (!rez.Contains("Success"))
-                {
-                    MessageBox.Show("Неудаётся подключиться к серверу\nВозможно отсутствует подключение к интернету");
-                    client.Close();
-                    return;
-                }
-                client.Send("<ad/" + Username.Text.ToLower() + "/" + Password.Password + "/" + Email.Text.ToLower() + ">");
-                string result = client.Receive();
-                client.Close();
+                int value = request.Add(Username.Text, Password.Password, Email.Text);
 
-                if (result.Contains("<ad/ok>"))
+                if (value == 0)
                 {
                     using (var appStorage = IsolatedStorageFile.GetUserStoreForApplication())
                     {
@@ -59,32 +60,27 @@ namespace EnterPage
                             {
                                 writer.WriteLine(Username.Text.ToLower());
                                 writer.WriteLine(Password.Password);
-                                PublicData.Username = Username.Text.ToLower();
-                                PublicData.Password = Password.Password;
+                                User.Name = Username.Text.ToLower();
+                                User.Password = Password.Password;
                             }
                         }
                     }
                     while (SetCoordinates() != 0);
 
                     BitmapImage bm = new BitmapImage(new Uri("/Resources/no_photo.jpg", UriKind.RelativeOrAbsolute));
-
                     SocketClient photoclient = new SocketClient();
-
-                    rez = photoclient.Connect(PublicData.IP, 5000);
-
-                    photoclient.SendFile(bm, PublicData.Username.ToLower() + ".jpg");
+                    photoclient.Connect(request.GetIP(), 5000);
+                    photoclient.SendFile(bm, User.Name.ToLower() + ".jpg");
                     photoclient.Close();
 
                     NavigationService.Navigate(new Uri("/ActionPage.xaml", UriKind.Relative));
                 }
 
 
-                if (result.Contains("<ad/bad>"))
+                if (value != 0)
                 {
-                    MessageBox.Show("Такой пользователь уже зарегестрирован");
-                    Username.Text = string.Empty;
-                    Password.Password = string.Empty;
-                    Email.Text = string.Empty;
+                    MessageBox.Show("Попробуй ещё раз");
+                    Refresh();
                 }
 
             }
@@ -95,19 +91,6 @@ namespace EnterPage
                 Email.Text = string.Empty;
             }
         }
-
-        private bool IsValidEmail(string inputEmail)
-        {
-            string strRegex = @"^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}" +
-                  @"\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\" +
-                  @".)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$";
-            Regex re = new Regex(strRegex);
-            if (re.IsMatch(inputEmail))
-                return (true);
-            else
-                return (false);
-        }
-
         private bool ValidateUsername()
         {
             if (String.IsNullOrWhiteSpace(Username.Text))
@@ -118,7 +101,6 @@ namespace EnterPage
 
             return true;
         }
-
         private bool ValidateEmail()
         {
             if (String.IsNullOrWhiteSpace(Email.Text))
@@ -129,7 +111,6 @@ namespace EnterPage
 
             return true;
         }
-
         private bool ValidatePassword()
         {
             if (String.IsNullOrWhiteSpace(Password.Password))
@@ -140,7 +121,6 @@ namespace EnterPage
 
             return true;
         }
-
         private int SetCoordinates()
         {
             GeoCoordinateWatcher watcher = new GeoCoordinateWatcher();  //
@@ -150,26 +130,15 @@ namespace EnterPage
             // если координаты известны
             if (coord.IsUnknown != true)
             {
-                PublicData.Latitude = coord.Latitude;                   // Сохраняем широту
-                PublicData.Longitude = coord.Longitude;                 // Сохраняем долготу
+                User.Latitude = coord.Latitude;                   // Сохраняем широту
+                User.Longitude = coord.Longitude;                 // Сохраняем долготу
 
-                SocketClient client = new SocketClient();               //
-                string rez = client.Connect(PublicData.IP, PublicData.PORT);                  // СОЕДИНЯЕМСЯ С СЕРВЕРОМ
-                //
-                //если неуспех, то выходим
-                if (!rez.Contains("Success"))
+                int value = request.SetCoordinates(User.Name, User.Latitude, User.Longitude);
+                if (value != 0)
                 {
-                    client.Close();
-                    return 1;
-                }
-
-                // отправляем на сервер запрос с координатами пользователя
-                // структура запроса: <uc/username/широта/долгота>
-                // подробнее в документации по запросам
-
-                client.Send("<uc/" + PublicData.Username.ToLower() + "/" + coord.Latitude + "/" + coord.Longitude + ">"); // отправка запроса
-                string result = client.Receive();                       // получаем ответ от сервера
-                client.Close();                                         // закрываем соединение
+                    MessageBox.Show("Ошибка при старте, попробуйте войти ещё раз");
+                    Refresh();
+                }                                         // закрываем соединение
                 watcher.Stop();
             }
             else
@@ -177,7 +146,6 @@ namespace EnterPage
                 return 1;
             }
             return 0;
-            //NotifyComplete();                                           // что-то нужное
         }
     }
 }

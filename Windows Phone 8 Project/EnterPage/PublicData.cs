@@ -17,23 +17,27 @@ using System.Device.Location;
 using System.Globalization;
 using System.Net.Sockets;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace EnterPage
 {
 
     public class PublicData
     {
-        public static string Username;
-        public static string Password;
-        public const int PORT = 32000;
-        public const string IP = "109.120.164.212";
         public static string MyImagePath;
-        public static List<Friend> p1;
-        public static double Latitude;
-        public static double Longitude;
         public static string Search_friend;
 
-
+        public static bool IsValidEmail(string inputEmail)
+        {
+            string strRegex = @"^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}" +
+                  @"\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\" +
+                  @".)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$";
+            Regex re = new Regex(strRegex);
+            if (re.IsMatch(inputEmail))
+                return (true);
+            else
+                return (false);
+        }
 
         static public string pluralForm(int n, string form1, string form2, string form5)
         {

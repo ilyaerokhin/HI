@@ -22,13 +22,14 @@
     <File>README_FIRST.txt</File>
     <File>Resources\add.png</File>
     <File>Resources\camera.png</File>
-    <File>Resources\cancel.png</File>
     <File>Resources\delete.png</File>
     <File>Resources\edit.png</File>
+    <File>Resources\Exit.png</File>
     <File>Resources\folder.png</File>
     <File>Resources\icon.png</File>
     <File>Resources\icona.png</File>
     <File>Resources\no_photo.jpg</File>
+    <File>Resources\Refresh.png</File>
     <File>Resources\Send photo.png</File>
     <File>Toolkit.Content\ApplicationBar.Add.png</File>
     <File>Toolkit.Content\ApplicationBar.Cancel.png</File>

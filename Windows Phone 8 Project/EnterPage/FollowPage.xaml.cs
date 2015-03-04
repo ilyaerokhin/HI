@@ -21,15 +21,17 @@ using System.Windows.Media;
 
 namespace EnterPage
 {
-    public partial class Follow_page : PhoneApplicationPage
+    public partial class FollowPage : PhoneApplicationPage
     {
         Geolocator geo = null;
         Geoposition pos = null;
 
         static double lat;
         static double lng;
-        static double distance_first;
-        static string friend_time;
+        static double priv_dist;
+        static double dist;
+        static double first;
+        string friend_time;
 
         byte red;
         byte blue;
@@ -40,9 +42,19 @@ namespace EnterPage
         DispatcherTimer TimerBlue;
         DispatcherTimer Timer;
         DispatcherTimer TimerNET;
-        public Follow_page()
+
+        static Requests request;
+        public FollowPage()
         {
             InitializeComponent();
+            request = new Requests();
+
+            if (request.isConnecting() == false)
+            {
+                MessageBox.Show("Неудаётся подключиться к серверу\nВозможно отсутствует подключение к интернету");
+                IsolatedStorageSettings.ApplicationSettings.Save();
+                Application.Current.Terminate();
+            }
 
             geo = new Geolocator();
             NAME.Text = "WE ARE FOLLOWING FOR "+ PublicData.Search_friend.ToUpper();
@@ -52,25 +64,12 @@ namespace EnterPage
             Colors.blue = 119;
             Colors.green = 34;
 
-            SocketClient client = new SocketClient();               //
-            string rez = client.Connect(PublicData.IP, PublicData.PORT);                  // СОЕДИНЯЕМСЯ С СЕРВЕРОМ
-            //
-            //если неуспех, то выходим
-            if (!rez.Contains("Success"))
-            {
-                client.Close();
-                return;
-            }
+            string value = request.GetFrendCoordinates(PublicData.Search_friend);                                             // получение ответа сервера
+            string[] data = value.Split(new Char[] { '/' });                // выдёргиваем строки из ответа
 
-            client.Send("<fc/" + PublicData.Search_friend.ToLower() + ">");                                             // запрос на получение других данных пользователя
-            string result = client.Receive();                                                 // получение ответа сервера
-            string[] data = result.Split(new Char[] { '/', '<', '>' });                // выдёргиваем строки из ответа
-
-            lat = Convert.ToDouble(data[3]);
-            lng = Convert.ToDouble(data[4]);
-            friend_time = PublicData.DateSearch(data[5]);
-
-            client.Close();  
+            lat = Convert.ToDouble(data[0]);
+            lng = Convert.ToDouble(data[1]);
+            friend_time = PublicData.DateSearch(data[2]);
 
             TimerGreen = new DispatcherTimer();
             TimerGreen.Interval = TimeSpan.FromMilliseconds(10);
@@ -96,56 +95,47 @@ namespace EnterPage
             TimerNET.Start();
             
         }
-
+        private void Refresh()
+        {
+            NavigationService.Navigate(new Uri("/FollowPage.xaml?" + DateTime.Now.Ticks, UriKind.Relative));
+        }
         async void TimerTick(Object sender, EventArgs args)
         {
             pos = await geo.GetGeopositionAsync();
 
-            PublicData.Latitude = pos.Coordinate.Point.Position.Latitude;
-            PublicData.Longitude = pos.Coordinate.Point.Position.Longitude;
+            User.Latitude = pos.Coordinate.Point.Position.Latitude;
+            User.Longitude = pos.Coordinate.Point.Position.Longitude;
 
-            distance.Text = PublicData.latlng2distance_moreinfo(PublicData.Latitude, PublicData.Longitude, lat, lng);
+            distance.Text = PublicData.latlng2distance_moreinfo(User.Latitude, User.Longitude, lat, lng);
             time.Text = friend_time;
 
-            if (distance_first == null)
+            if (first == null)
             {
-                distance_first = PublicData.latlng2distance_meters(PublicData.Latitude, PublicData.Longitude, lat, lng);
+                first = PublicData.latlng2distance_meters(User.Latitude, User.Longitude, lat, lng);
+                priv_dist = first;
             }
             else
             {
-                Change_Image(PublicData.latlng2distance_meters(PublicData.Latitude, PublicData.Longitude, lat, lng), distance_first);
+                dist = PublicData.latlng2distance_meters(User.Latitude, User.Longitude, lat, lng);
+                Change_Image(dist, priv_dist, first);
+                priv_dist = dist;
             }
         }
-
-        public static void TimerNETTick(Object sender, EventArgs args)
+        public void TimerNETTick(Object sender, EventArgs args)
         {
-
-            SocketClient client = new SocketClient();               //
-            string rez = client.Connect(PublicData.IP, PublicData.PORT);                  // СОЕДИНЯЕМСЯ С СЕРВЕРОМ
-            //
-            //если неуспех, то выходим
-            if (!rez.Contains("Success"))
+            int value = request.SetCoordinates(User.Name, User.Latitude, User.Longitude);
+            
+            if(value != 0)
             {
-                client.Close();
-                return;
+                Refresh();
             }
 
-            // отправляем на сервер запрос с координатами пользователя
-            // структура запроса: <uc/username/широта/долгота>
-            // подробнее в документации по запросам
+            string value2 = request.GetFrendCoordinates(PublicData.Search_friend);                                             // получение ответа сервера
+            string[] data = value2.Split(new Char[] { '/' });                // выдёргиваем строки из ответа
 
-            client.Send("<uc/" + PublicData.Username.ToLower() + "/" + PublicData.Latitude + "/" + PublicData.Longitude + ">"); // отправка запроса
-            string result = client.Receive();                       // получаем ответ от сервера
-
-            client.Send("<fc/" + PublicData.Search_friend.ToLower() + ">");                                             // запрос на получение других данных пользователя
-            result = client.Receive();                                                 // получение ответа сервера
-            string[] data = result.Split(new Char[] { '/', '<', '>' });                // выдёргиваем строки из ответа
-
-            lat = Convert.ToDouble(data[3]);
-            lng = Convert.ToDouble(data[4]);
-            friend_time = PublicData.DateSearch(data[5]);
-
-            client.Close();                                         // закрываем соединение
+            lat = Convert.ToDouble(data[0]);
+            lng = Convert.ToDouble(data[1]);
+            friend_time = PublicData.DateSearch(data[2]);                                     // закрываем соединение
         }
 
         void OnTimerRedTick(Object sender, EventArgs args)
@@ -166,7 +156,6 @@ namespace EnterPage
 
             Top.Background = new System.Windows.Media.SolidColorBrush(Color.FromArgb(255, Colors.red, Colors.green, Colors.blue));
         }
-
         void OnTimerBlueTick(Object sender, EventArgs args)
         {
             if (Colors.blue == blue)
@@ -185,7 +174,6 @@ namespace EnterPage
 
             Top.Background = new System.Windows.Media.SolidColorBrush(Color.FromArgb(255, Colors.red, Colors.green, Colors.blue));
         }
-
         void OnTimerGreenTick(Object sender, EventArgs args)
         {
             if (Colors.green == green)
@@ -205,16 +193,16 @@ namespace EnterPage
 
             Top.Background = new System.Windows.Media.SolidColorBrush(Color.FromArgb(255, Colors.red, Colors.green, Colors.blue));
         }
-        private void Change_Image(double length, double first)
+        private void Change_Image(double length, double priv, double first)
         {
             double percent = first/100.0;
-            if (length < first)
+            if (length < priv)
             {
                 double difference = first - length;
                 double per = difference / percent;
                 hot(per);
             }
-            if (length > first)
+            if (length > priv)
             {
                 double difference = length - first;
                 double per = difference / percent;

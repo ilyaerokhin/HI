@@ -34,3 +34,7 @@ C:\Users\user\Desktop\HI 19.01.15\ScheduledTaskAgent1\Bin\Debug\ScheduledTaskAge
 C:\Users\user\Desktop\HI 19.01.15\ScheduledTaskAgent1\Bin\Debug\ScheduledTaskAgent1.pdb
 C:\Users\user\Desktop\HI 19.01.15\ScheduledTaskAgent1\obj\Debug\ScheduledTaskAgent1.dll
 C:\Users\user\Desktop\HI 19.01.15\ScheduledTaskAgent1\obj\Debug\ScheduledTaskAgent1.pdb
+C:\Users\user\Desktop\HI\Windows Phone 8 Project\ScheduledTaskAgent1\Bin\Debug\ScheduledTaskAgent1.dll
+C:\Users\user\Desktop\HI\Windows Phone 8 Project\ScheduledTaskAgent1\Bin\Debug\ScheduledTaskAgent1.pdb
+C:\Users\user\Desktop\HI\Windows Phone 8 Project\ScheduledTaskAgent1\obj\Debug\ScheduledTaskAgent1.dll
+C:\Users\user\Desktop\HI\Windows Phone 8 Project\ScheduledTaskAgent1\obj\Debug\ScheduledTaskAgent1.pdb

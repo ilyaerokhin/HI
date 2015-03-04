@@ -7,42 +7,43 @@ using System.Windows.Controls;
 using System.Windows.Navigation;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
+using System.IO.IsolatedStorage;
 
 namespace EnterPage
 {
-    public partial class Forget : PhoneApplicationPage
+    public partial class ForgetPage : PhoneApplicationPage
     {
-        public Forget()
+        Requests request;
+        public ForgetPage()
         {
             InitializeComponent();
-        }
+            request = new Requests();
 
+            if (request.isConnecting() == false)
+            {
+                MessageBox.Show("Неудаётся подключиться к серверу\nВозможно отсутствует подключение к интернету");
+                IsolatedStorageSettings.ApplicationSettings.Save();
+                Application.Current.Terminate();
+            }
+        }
+        private void Refresh()
+        {
+            NavigationService.Navigate(new Uri("/ForgetPage.xaml?" + DateTime.Now.Ticks, UriKind.Relative));
+        }
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             if (ValidateUsername())
             {
-                SocketClient client = new SocketClient();
-                string rez = client.Connect(PublicData.IP, PublicData.PORT);
+                string value = request.GetPassword(Username.Text);
 
-                if (!rez.Contains("Success"))
-                {
-                    MessageBox.Show("Неудаётся подключиться к серверу\nВозможно отсутствует подключение к интернету");
-                    client.Close();
-                    return;
-                }
-
-                client.Send("<gp/" + Username.Text.ToLower() +">");
-                string result = client.Receive();
-                client.Close();
-                if (result.Contains("<gp/bad>"))
+                if (value == null)
                 {
                     Username.Text = string.Empty;
                     MessageBox.Show("Не удалось отправить заявку на восстановление пароля\nПроверьте правильность вводимых данных.");
                 }
                 else
                 {
-                    string[] email = result.Split(new Char[] { '/', '<', '>' });
-                    MessageBox.Show("Мы отправили Ваш пароль по адресу: "+email[2]+"\nЕсли сообщение не пришло, проверьте папку со спамом");
+                    MessageBox.Show("Мы отправили Ваш пароль по адресу: "+value+"\nЕсли сообщение не пришло, проверьте папку со спамом");
                     Username.Text = string.Empty;
                 }
             }
@@ -51,7 +52,6 @@ namespace EnterPage
                 Username.Text = string.Empty;
             }
         }
-
         private bool ValidateUsername()
         {
             if (String.IsNullOrWhiteSpace(Username.Text))
