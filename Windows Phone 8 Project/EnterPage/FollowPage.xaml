@@ -37,7 +37,11 @@
             <StackPanel HorizontalAlignment="Left" Height="53" Margin="54,468,0,0" VerticalAlignment="Top" Width="350">
                 <TextBlock x:Name="distance" Text="Загрузка ..."  Style="{StaticResource PhoneTextSubtleStyle}" Height="53" Margin="0" HorizontalAlignment="Right" Width="350" FontSize="30" TextAlignment="Center" Foreground="#99080808"/>
             </StackPanel>
-            <Image x:Name="Image_friend" HorizontalAlignment="Left" Height="402" Margin="26,41,0,0" VerticalAlignment="Top" Width="402"/>
+            
+                <Grid Margin="0,0,0,224">
+                    <Image x:Name="Image_friend" Height="402" Margin="28,25,26,20" Width="402" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                </Grid>
+
             <TextBlock x:Name="time" Text=""  Style="{StaticResource PhoneTextSubtleStyle}" Margin="0,526,52,92" HorizontalAlignment="Right" Width="350" FontSize="30" TextAlignment="Center" Foreground="#99080808"/>
         </Grid>
     </Grid>

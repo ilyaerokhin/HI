@@ -179,11 +179,11 @@ namespace EnterPage
 
             if (value != 0)
             {
-                MessageBox.Show("Пользователь не найден");
+                MessageBox.Show("Неудача");
             }
             else
             {
-                MessageBox.Show("Пользователю с ником: " + Friend_box.Text.ToLower() + "отослана заявка в друзья");
+                MessageBox.Show("Пользователю с ником: " + Friend_box.Text.ToLower() + " отослана заявка в друзья");
             }
 
             this.Friend_box.Text = "";
@@ -217,7 +217,7 @@ namespace EnterPage
             }
             else
             {
-                MessageBox.Show("Пользователю с ником: " + PublicData.Search_friend + "успешно удалён из друзей");
+                MessageBox.Show("Пользователю с ником: " + PublicData.Search_friend + " успешно удалён из друзей");
             }
 
             this.Focus();
@@ -230,7 +230,7 @@ namespace EnterPage
            {
                TextBlock wantedChild = wantedNode as TextBlock;
                PublicData.Search_friend = wantedChild.Text;
-               NavigationService.Navigate(new Uri("/Follow_page.xaml", UriKind.Relative));
+               NavigationService.Navigate(new Uri("/FollowPage.xaml", UriKind.Relative));
            }
             
         }
@@ -283,11 +283,11 @@ namespace EnterPage
 
             if (value != 0)
             {
-                MessageBox.Show("Пользователь не найден");
+                MessageBox.Show("Неудача");
             }
             else
             {
-                MessageBox.Show("Пользователю с ником: " + Friend_box.Text.ToLower() + "отослана заявка в друзья");
+                MessageBox.Show("Пользователю с ником: " + Friend_box.Text.ToLower() + " отослана заявка в друзья");
             }
 
             this.Refresh();
