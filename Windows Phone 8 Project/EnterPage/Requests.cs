@@ -30,7 +30,7 @@ namespace EnterPage
                 IsConnect = true;
             }
         }
-        ~Requests()
+        public void Close()
         {
             client.Close();
         }
@@ -365,7 +365,15 @@ namespace EnterPage
                 return -1; // содинения с сервером нет
             }
 
-            client.Send("<ss/" + user.ToLower() + "/" + password + "/" + status + ">");
+            if (status == string.Empty)
+            {
+                client.Send("<ss/" + user.ToLower() + "/" + password + "/@>");
+            }
+            else
+            {
+                client.Send("<ss/" + user.ToLower() + "/" + password + "/" + status + ">");
+            }
+
             result = client.Receive();
 
             if (result.Contains("<ss/ok>"))

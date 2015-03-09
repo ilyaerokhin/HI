@@ -355,7 +355,6 @@ int AddFriend(char *path, char *user, char *password, char *userfriend)
 	}
 	
 	l = isHere(path, user, "potential.txt", userfriend);
-
 	if(l==0)
 	{
 		strcat(mydir,"/friends.txt");
@@ -416,6 +415,12 @@ int AddUser(char *path, char *user, char *password, char *email)
 	strcpy(dir,path);
 	strcat(dir,"/");
 	strcat(dir,user);
+	
+	char dirphoto[100];
+	strcpy(dirphoto,"/var/www/html/photos/");
+	strcat(dirphoto,user);
+	strcat(dirphoto,".jpg");
+	char *nophoto = "/home/no_photo.jpg";
 
 	int a = access(dir, 0); 
 	if(a!=0)
@@ -468,7 +473,6 @@ int CheckUser(char *path, char *user, char *password)
 			break;
 		}
 	}
-	printf("%s\n", pass);
 
 	if(!strcmp(password,pass))
 	{
@@ -810,7 +814,6 @@ void DO(char *str, char *request)
 		int n = access(dir, 0);
       		if(n==0)
       		{	
-			printf("n = %d\n",n);
 			Read(path, userfriend, x, 1);
 			Read(path, userfriend, y, 2);
 			struct stat st;
@@ -822,7 +825,6 @@ void DO(char *str, char *request)
       	}
       	else
       	{
-		printf("n = %d\n",n);
         	sprintf(request, "<fc/not>\0");
       	} 
    	}
@@ -866,7 +868,7 @@ void DO(char *str, char *request)
 		{
 			sprintf(request, "<af/ok>\0");	
 		}
-		if(n == 1 || n == 2 || n == 3 || n == 4)
+		if(n == 1 || n == 2 || n == 3 || n == 4 || n == 5)
 		{ 
 			sprintf(request, "<af/bad>\0");	
 		}

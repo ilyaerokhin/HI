@@ -23,6 +23,9 @@ namespace EnterPage
         public NavigationPage()
         {
             InitializeComponent();
+        }
+        protected override void OnNavigatedTo(System.Windows.Navigation.NavigationEventArgs e)
+        {
             request = new Requests();
 
             if (request.isConnecting() == false)
@@ -34,6 +37,7 @@ namespace EnterPage
         }
         private void Refresh()
         {
+            request.Close();
             NavigationService.Navigate(new Uri("/NavigationPage.xaml?" + DateTime.Now.Ticks, UriKind.Relative));
         }
         private void CreateService()
@@ -135,17 +139,20 @@ namespace EnterPage
             {
                 while (SetCoordinates() != 0) ; // Пытаемся получить короординаты пользователя
                 CreateService();                  // Создание сервиса для работы фонового процесса
+                request.Close();
                 NavigationService.Navigate(new Uri("/ActionPage.xaml", UriKind.Relative));             // переходим на другую страницу
             }
             Thread.Sleep(3000);
             // если имя пользователя и пароль не сохранены
             if (result == 2)
             {
+                request.Close();
                 NavigationService.Navigate(new Uri("/MainPage.xaml", UriKind.Relative));               // переходим на другую страницу
             }
             // если вход выполнен впервые
             if (result == 1)
             {
+                request.Close();
                 NavigationService.Navigate(new Uri("/Resolution.xaml", UriKind.Relative));               // переходим на другую страницу
             }
         }

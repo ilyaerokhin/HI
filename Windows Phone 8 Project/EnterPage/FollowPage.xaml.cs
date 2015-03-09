@@ -47,6 +47,9 @@ namespace EnterPage
         public FollowPage()
         {
             InitializeComponent();
+        }
+        protected override void OnNavigatedTo(System.Windows.Navigation.NavigationEventArgs e)
+        {
             request = new Requests();
 
             if (request.isConnecting() == false)
@@ -57,7 +60,7 @@ namespace EnterPage
             }
 
             geo = new Geolocator();
-            NAME.Text = "WE ARE FOLLOWING FOR "+ PublicData.Search_friend.ToUpper();
+            NAME.Text = "WE ARE FOLLOWING FOR " + PublicData.Search_friend.ToUpper();
             Image_friend.Source = new BitmapImage(new Uri("http://109.120.164.212/photos/" + PublicData.Search_friend.ToLower() + ".jpg" + "?" + Guid.NewGuid().ToString()));
 
             Colors.red = 204;
@@ -93,10 +96,10 @@ namespace EnterPage
 
             Timer.Start();
             TimerNET.Start();
-            
         }
         private void Refresh()
         {
+            request.Close();
             NavigationService.Navigate(new Uri("/FollowPage.xaml?" + DateTime.Now.Ticks, UriKind.Relative));
         }
         async void TimerTick(Object sender, EventArgs args)
@@ -306,6 +309,12 @@ namespace EnterPage
                 TimerGreen.Start();
                 TimerBlue.Start();
             }
+        }
+
+        private void PhoneApplicationPage_BackKeyPress(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            request.Close();
+            NavigationService.Navigate(new Uri("/ActionPage.xaml?" + DateTime.Now.Ticks, UriKind.Relative));
         }
 
     }

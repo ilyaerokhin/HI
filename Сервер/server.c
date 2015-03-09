@@ -8,6 +8,8 @@
 #include <pthread.h>
 #include "dir.h"
 
+#define MAXSIZEREQUEST 1000
+
 void * threadwait_func(void *arg)
 {
 	pid_t     killpid;
@@ -31,8 +33,8 @@ int Server()
    	struct sockaddr_in servaddr,cliaddr;
    	socklen_t clilen;
    	pid_t     childpid;
-   	char mesg[1000];
-	char request[1000];
+   	char mesg[MAXSIZEREQUEST];
+	char request[MAXSIZEREQUEST];
 
    	listenfd=socket(AF_INET,SOCK_STREAM,0);
 
@@ -64,7 +66,7 @@ int Server()
 
          		for(;;)
          		{
-            			n = recv(connfd,mesg,50,0);
+            			n = recv(connfd,mesg,MAXSIZEREQUEST,0);
 	    			if(n<=0)
             			{
                				exit(1);
@@ -73,7 +75,7 @@ int Server()
             			send(connfd,request,strlen(request),0);
             			mesg[n] = 0;
             			printf("(%d): ", getpid());
-            			printf("%s",mesg);
+            			printf("%s\n",mesg);
          		}
          
       		}

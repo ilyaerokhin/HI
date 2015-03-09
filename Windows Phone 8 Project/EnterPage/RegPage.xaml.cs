@@ -22,6 +22,9 @@ namespace EnterPage
         public RegPage()
         {
             InitializeComponent();
+        }
+        protected override void OnNavigatedTo(System.Windows.Navigation.NavigationEventArgs e)
+        {
             request = new Requests();
 
             if (request.isConnecting() == false)
@@ -33,6 +36,7 @@ namespace EnterPage
         }
         private void Refresh()
         {
+            request.Close();
             NavigationService.Navigate(new Uri("/RegPage.xaml?" + DateTime.Now.Ticks, UriKind.Relative));
         }
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -67,12 +71,7 @@ namespace EnterPage
                     }
                     while (SetCoordinates() != 0);
 
-                    BitmapImage bm = new BitmapImage(new Uri("/Resources/no_photo.jpg", UriKind.RelativeOrAbsolute));
-                    SocketClient photoclient = new SocketClient();
-                    photoclient.Connect(request.GetIP(), 5000);
-                    photoclient.SendFile(bm, User.Name.ToLower() + ".jpg");
-                    photoclient.Close();
-
+                    request.Close();
                     NavigationService.Navigate(new Uri("/ActionPage.xaml", UriKind.Relative));
                 }
 
@@ -96,6 +95,12 @@ namespace EnterPage
             if (String.IsNullOrWhiteSpace(Username.Text))
             {
                 MessageBox.Show("Пожалуйста, введите имя пользователя");
+                return false;
+            }
+
+            if (Username.Text.Contains(" "))
+            {
+                MessageBox.Show("Пожалуйста, введите имя пользователя без пробелов");
                 return false;
             }
 
@@ -146,6 +151,11 @@ namespace EnterPage
                 return 1;
             }
             return 0;
+        }
+        private void PhoneApplicationPage_BackKeyPress(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            request.Close();
+            NavigationService.Navigate(new Uri("/MainPage.xaml?" + DateTime.Now.Ticks, UriKind.Relative));
         }
     }
 }

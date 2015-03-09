@@ -17,6 +17,9 @@ namespace EnterPage
         public ForgetPage()
         {
             InitializeComponent();
+        }
+        protected override void OnNavigatedTo(System.Windows.Navigation.NavigationEventArgs e)
+        {
             request = new Requests();
 
             if (request.isConnecting() == false)
@@ -28,6 +31,7 @@ namespace EnterPage
         }
         private void Refresh()
         {
+            request.Close();
             NavigationService.Navigate(new Uri("/ForgetPage.xaml?" + DateTime.Now.Ticks, UriKind.Relative));
         }
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -61,6 +65,11 @@ namespace EnterPage
             }
 
             return true;
+        }
+        private void PhoneApplicationPage_BackKeyPress(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            request.Close();
+            NavigationService.Navigate(new Uri("/MainPage.xaml?" + DateTime.Now.Ticks, UriKind.Relative));
         }
     }
 }

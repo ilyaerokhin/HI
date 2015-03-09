@@ -30,14 +30,6 @@ namespace EnterPage
         public ActionPage()
         {
             InitializeComponent();
-            request = new Requests();
-
-            if (request.isConnecting() == false)
-            {
-                MessageBox.Show("Неудаётся подключиться к серверу\nВозможно отсутствует подключение к интернету");
-                IsolatedStorageSettings.ApplicationSettings.Save();
-                Application.Current.Terminate();
-            }
 
             Title.Text = "Hello, " + User.Name.ToLower()+"!";
 
@@ -54,15 +46,25 @@ namespace EnterPage
         }
         private void Refresh()
         {
+            request.Close();
             NavigationService.Navigate(new Uri("/ActionPage.xaml?" + DateTime.Now.Ticks, UriKind.Relative));
         }
-        private void PhoneApplicationPage_Loaded(object sender, RoutedEventArgs e)
+        protected override void OnNavigatedTo(System.Windows.Navigation.NavigationEventArgs e)
         {
+            request = new Requests();
+
+            if (request.isConnecting() == false)
+            {
+                MessageBox.Show("Неудаётся подключиться к серверу\nВозможно отсутствует подключение к интернету");
+                IsolatedStorageSettings.ApplicationSettings.Save();
+                Application.Current.Terminate();
+            }
+
             User.ListFriends = new List<Friend>();                                                    // создаём список друзей
 
             string value = request.GetListFriends(User.Name, User.Password);
             string[] friends = value.Split(new Char[] { '/' });                    // выдёргиваем из ответа строки между разделителями
-            
+
             foreach (string s in friends)
             {
                 // если строка не пустая
@@ -72,13 +74,13 @@ namespace EnterPage
                     string friendstatus = request.GetStatus(s); // получаем статус друга
                     string datafriends = request.GetFrendCoordinates(s); // получаем данные о друге
 
-                    if(status == null || datafriends == null)
+                    if (status == null || datafriends == null)
                     {
                         MessageBox.Show("Ошибка при получении информации о друзьях, попробуйте ещё раз");
                         Refresh();
                     }
 
-          
+
                     string[] data = datafriends.Split(new Char[] { '/' });                // выдёргиваем строки из ответа
                     double lat = Convert.ToDouble(data[0]);
                     double lng = Convert.ToDouble(data[1]);
@@ -97,7 +99,7 @@ namespace EnterPage
                 }
             }
 
-   
+
 
             User.ListPotential = new List<Potential>();                                                    // создаём список друзей
             string potentialfriends = request.GetListPotential(User.Name, User.Password);
@@ -110,7 +112,7 @@ namespace EnterPage
                 if (s.Trim() != "")
                 {
                     list_potential.DataContext = User.ListPotential;
-                     User.ListPotential.Add(new Potential() { name = s, ImagePath = "http://109.120.164.212/photos/" + s + ".jpg" + "?" + Guid.NewGuid().ToString() });
+                    User.ListPotential.Add(new Potential() { name = s, ImagePath = "http://109.120.164.212/photos/" + s + ".jpg" + "?" + Guid.NewGuid().ToString() });
                 }
             }
             list_potential.DataContext = User.ListPotential;
@@ -177,17 +179,40 @@ namespace EnterPage
             this.Focus();
             int value = request.AddFriend(User.Name, User.Password, Friend_box.Text.ToLower());
 
-            if (value != 0)
-            {
-                MessageBox.Show("Неудача");
-            }
-            else
+            if (value == 0)
             {
                 MessageBox.Show("Пользователю с ником: " + Friend_box.Text.ToLower() + " отослана заявка в друзья");
+                this.Refresh();
+                return;
             }
 
-            this.Friend_box.Text = "";
-            this.Refresh();
+            if(value == 1)
+            {
+                MessageBox.Show("Вы не можете добавить в друзья пользователя " + Friend_box.Text.ToLower());
+                this.Friend_box.Text = "";
+                return;
+            }
+
+            if (value == -1)
+            {
+                MessageBox.Show("Отсутствует соединение с сервером");
+                this.Refresh();
+                return;
+            }
+
+            if (value == -2)
+            {
+                MessageBox.Show("Повторите запрос");
+                this.Friend_box.Text = "";
+                return;
+            }
+
+            if (value == -3)
+            {
+                MessageBox.Show("Непредвиденная ошибка");
+                this.Refresh();
+                return;
+            }
         }
         private void SetStatus_Tap(object sender, System.Windows.Input.GestureEventArgs e)
         {
@@ -205,6 +230,7 @@ namespace EnterPage
         }
         private void Follow_Click(object sender, RoutedEventArgs e)
         {
+            request.Close();
             NavigationService.Navigate(new Uri("/FollowPage.xaml", UriKind.Relative));
         }
         private void Remove_Click(object sender, RoutedEventArgs e)
@@ -230,6 +256,7 @@ namespace EnterPage
            {
                TextBlock wantedChild = wantedNode as TextBlock;
                PublicData.Search_friend = wantedChild.Text;
+               request.Close();
                NavigationService.Navigate(new Uri("/FollowPage.xaml", UriKind.Relative));
            }
             
@@ -275,6 +302,7 @@ namespace EnterPage
                     }
                 }
             }
+            request.Close();
             NavigationService.Navigate(new Uri("/MainPage.xaml", UriKind.Relative));
         }
         private void Add_Click(object sender, RoutedEventArgs e)
@@ -287,10 +315,11 @@ namespace EnterPage
             }
             else
             {
-                MessageBox.Show("Пользователю с ником: " + Friend_box.Text.ToLower() + " отослана заявка в друзья");
+                MessageBox.Show("Пользователю с ником: " + PublicData.Search_friend + " отослана заявка в друзья");
             }
 
             this.Refresh();
         }
+           
     }
 }

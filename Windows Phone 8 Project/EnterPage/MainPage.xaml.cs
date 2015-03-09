@@ -21,9 +21,12 @@ namespace EnterPage
         public MainPage()
         {
             InitializeComponent();
+        }
+        protected override void OnNavigatedTo(System.Windows.Navigation.NavigationEventArgs e)
+        {
             request = new Requests();
 
-            if(request.isConnecting() == false)
+            if (request.isConnecting() == false)
             {
                 MessageBox.Show("Неудаётся подключиться к серверу\nВозможно отсутствует подключение к интернету");
                 IsolatedStorageSettings.ApplicationSettings.Save();
@@ -32,6 +35,7 @@ namespace EnterPage
         }
         private void Refresh()
         {
+            request.Close();
             NavigationService.Navigate(new Uri("/MainPage.xaml?" + DateTime.Now.Ticks, UriKind.Relative));
         }
         private void EnterButton_Click(object sender, RoutedEventArgs e)
@@ -57,6 +61,7 @@ namespace EnterPage
                     User.Password = Password.Password;
 
                     while (SetCoordinates() != 0) ;
+                    request.Close();
                     NavigationService.Navigate(new Uri("/ActionPage.xaml", UriKind.Relative));
                 }
 
@@ -92,6 +97,12 @@ namespace EnterPage
             if (String.IsNullOrWhiteSpace(Username.Text))
             {
                 MessageBox.Show("Пожалуйста, введите имя пользователя");
+                return false;
+            }
+
+            if (Username.Text.Contains(" "))
+            {
+                MessageBox.Show("Пожалуйста, введите имя пользователя без пробелов");
                 return false;
             }
 
@@ -144,6 +155,7 @@ namespace EnterPage
         }
         private void RegButton_Click(object sender, RoutedEventArgs e)
         {
+            request.Close();
             NavigationService.Navigate(new Uri("/RegPage.xaml", UriKind.Relative));
         }
     }

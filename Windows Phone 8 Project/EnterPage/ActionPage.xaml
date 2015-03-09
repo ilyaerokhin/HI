@@ -11,7 +11,7 @@
     FontFamily="{StaticResource PhoneFontFamilyNormal}"
     FontSize="{StaticResource PhoneFontSizeNormal}"
     SupportedOrientations="Portrait"  Orientation="Portrait"
-    shell:SystemTray.IsVisible="True" BackKeyPress="PhoneApplicationPage_BackKeyPress" Loaded="PhoneApplicationPage_Loaded" Foreground="White">
+    shell:SystemTray.IsVisible="True" BackKeyPress="PhoneApplicationPage_BackKeyPress" Foreground="White">
 
     
     <!--LayoutRoot представляет корневую сетку, где размещается все содержимое страницы-->
@@ -133,7 +133,7 @@
                     <ListBox x:Name="list_potential"  ItemsSource="{Binding}">
                         <ListBox.ItemTemplate>
                             <DataTemplate>
-                                <StackPanel x:Name="Potential_panel" Orientation="Horizontal" Margin="0,0,0,17" Tap="Profile_panel_Tap" Hold="Profile_panel_Hold">
+                                <StackPanel x:Name="Potential_panel" Orientation="Horizontal" Margin="0,0,0,17" Hold="Profile_panel_Hold">
                                     <Image Height="100" Width="100" Source="{Binding ImagePath}" Margin="12,0,9,0"/>
                                     <StackPanel x:Name="Child" Height="100"  Width="311" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" >
                                         <TextBlock x:Name="name" Text="{Binding name}" TextWrapping="Wrap" Style="{StaticResource PhoneTextExtraLargeStyle}" FontFamily="Segoe WP" FontSize="35" Foreground="#FF80461B" HorizontalAlignment="Left" VerticalAlignment="Center" />
