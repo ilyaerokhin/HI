@@ -28,9 +28,9 @@
 
         <!--ContentPanel – поместите здесь дополнительное содержимое-->
         <Grid x:Name="ContentPanel" Margin="12,70,12,249" Grid.Row="1">
-            <TextBox x:Name="Username" HorizontalAlignment="Left" Height="72" Margin="0,30,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="456" BorderBrush="#BFDADADA"/>
+            <TextBox x:Name="Username" HorizontalAlignment="Left" Height="72" Margin="0,30,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="456" BorderBrush="#BFDADADA" MaxLength="20"/>
             <TextBlock HorizontalAlignment="Left" Margin="14,5,0,0" TextWrapping="Wrap" Text="Введите логин" VerticalAlignment="Top" Foreground="#FF80461B"/>
-            <PasswordBox x:Name="Password" HorizontalAlignment="Left" Height="72" Margin="0,125,0,0" VerticalAlignment="Top" Width="456" BorderBrush="#BFDADADA"/>
+            <PasswordBox x:Name="Password" HorizontalAlignment="Left" Height="72" Margin="0,125,0,0" VerticalAlignment="Top" Width="456" BorderBrush="#BFDADADA" MaxLength="20"/>
             <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Введите пароль" VerticalAlignment="Top" Margin="14,100,0,0" Foreground="#FF80461B"/>
             <TextBox x:Name="Email" HorizontalAlignment="Left" Height="72" Margin="0,221,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="456" BorderBrush="#BFDADADA"/>
             <TextBlock HorizontalAlignment="Left" Margin="14,196,0,0" TextWrapping="Wrap" Text="Введите Ваш E-mail" VerticalAlignment="Top" Foreground="#FF80461B"/>

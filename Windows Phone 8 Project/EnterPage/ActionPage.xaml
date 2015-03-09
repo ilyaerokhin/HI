@@ -43,7 +43,7 @@
                     </Grid.ColumnDefinitions>
                     <StackPanel Orientation="Horizontal" Margin="-7,-20,0,546">
                         <Image Height="50" Width="50" Source="/Resources/add.png" Margin="12,11,9,17" Tap="add_friend_Tap"/>
-                        <TextBox x:Name="Friend_box" Margin="-5,4,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="392" BorderBrush="#BFDADADA" Height="70"/>
+                        <TextBox x:Name="Friend_box" Margin="-5,4,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="392" BorderBrush="#BFDADADA" Height="70" MaxLength="20"/>
                     </StackPanel>
                     <ListBox x:Name="list1" Margin="0,60,0,0"  ItemsSource="{Binding}">
                         <ListBox.ItemTemplate>

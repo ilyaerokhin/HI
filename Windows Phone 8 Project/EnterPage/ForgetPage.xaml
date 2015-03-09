@@ -28,7 +28,7 @@
 
         <!--ContentPanel – поместите здесь дополнительное содержимое-->
         <Grid x:Name="ContentPanel" Margin="12,70,12,249" Grid.Row="1">
-            <TextBox x:Name="Username" HorizontalAlignment="Left" Height="72" Margin="0,30,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="456" BorderBrush="#BFDADADA"/>
+            <TextBox x:Name="Username" HorizontalAlignment="Left" Height="72" Margin="0,30,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="456" BorderBrush="#BFDADADA" MaxLength="20"/>
             <TextBlock HorizontalAlignment="Left" Margin="14,5,0,0" TextWrapping="Wrap" Text="Введите логин" VerticalAlignment="Top" Foreground="#FF80461B"/>
             <Button Content="Напомнить мой пароль" HorizontalAlignment="Left" Margin="0,107,0,0" VerticalAlignment="Top" Foreground="White" BorderBrush="#BFDADADA" Height="72" Background="#A5CC7722" Width="456" Click="Button_Click"/>
         </Grid>
