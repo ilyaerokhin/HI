@@ -116,12 +116,6 @@ namespace EnterPage
                 return false;
             }
 
-            if (Password.Password.Contains("/") || Password.Password.Contains("<") || Password.Password.Contains(">"))
-            {
-                MessageBox.Show("Пожалуйста, не используйте символы <,>,/");
-                return false;
-            }
-
             return true;
         }
         private void PhoneApplicationPage_BackKeyPress(object sender, System.ComponentModel.CancelEventArgs e)

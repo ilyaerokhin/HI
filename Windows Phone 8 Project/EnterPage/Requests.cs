@@ -174,7 +174,7 @@ namespace EnterPage
 
             string[] data = result.Split(new Char[] { '/', '<', '>' });
 
-            return data[3].Replace('.',',') + "/" + data[4].Replace('.',',') + "/" + data[5]; //      latitude/longitude/date
+            return data[3] + "/" + data[4] + "/" + data[5]; //      latitude/longitude/date
         }
         public int AddFriend(string user, string password, string friend)
         {

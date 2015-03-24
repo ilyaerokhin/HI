@@ -1,6 +1,6 @@
-﻿<xapCache source="C:\Users\user\Desktop\HI\Windows Phone 8 Project\EnterPage\Bin\Debug\EnterPage_Debug_AnyCPU.xap" wasSigned="False" wasTritonized="False" certificateThumbprint="" TimeStampUrl="" signKeyFile="" signKeyPassword="" lastWriteTime="24.03.2015 10:13:48">
+﻿<xapCache source="C:\Users\user\Desktop\HI\Windows Phone 8 Project\EnterPage\Bin\Debug\EnterPage_Debug_AnyCPU.xap" wasSigned="False" wasTritonized="False" certificateThumbprint="" TimeStampUrl="" signKeyFile="" signKeyPassword="" lastWriteTime="09.03.2015 17:09:35">
   <file source="C:\Users\user\Desktop\HI\Windows Phone 8 Project\EnterPage\Bin\Debug\resources.pri" archivePath="resources.pri" lastWriteTime="04.03.2015 14:55:00" />
-  <file source="C:\Users\user\Desktop\HI\Windows Phone 8 Project\EnterPage\obj\Debug\EnterPage.dll" archivePath="EnterPage.dll" lastWriteTime="24.03.2015 10:13:47" />
+  <file source="C:\Users\user\Desktop\HI\Windows Phone 8 Project\EnterPage\obj\Debug\EnterPage.dll" archivePath="EnterPage.dll" lastWriteTime="09.03.2015 17:09:31" />
   <file source="C:\Users\user\Desktop\HI\Windows Phone 8 Project\EnterPage\Assets\AlignmentGrid.png" archivePath="Assets\AlignmentGrid.png" lastWriteTime="19.01.2015 22:06:17" />
   <file source="C:\Users\user\Desktop\HI\Windows Phone 8 Project\EnterPage\Assets\ApplicationIcon.png" archivePath="Assets\ApplicationIcon.png" lastWriteTime="19.01.2015 22:06:18" />
   <file source="C:\Users\user\Desktop\HI\Windows Phone 8 Project\EnterPage\Assets\BadgeLogo.png" archivePath="Assets\BadgeLogo.png" lastWriteTime="19.01.2015 22:06:18" />
@@ -35,13 +35,13 @@
   <file source="C:\Users\user\Desktop\HI\Windows Phone 8 Project\EnterPage\Toolkit.Content\ApplicationBar.Delete.png" archivePath="Toolkit.Content\ApplicationBar.Delete.png" lastWriteTime="19.01.2015 22:06:34" />
   <file source="C:\Users\user\Desktop\HI\Windows Phone 8 Project\EnterPage\Toolkit.Content\ApplicationBar.Select.png" archivePath="Toolkit.Content\ApplicationBar.Select.png" lastWriteTime="19.01.2015 22:06:34" />
   <file source="C:\Users\user\Desktop\HI\Windows Phone 8 Project\EnterPage\Bin\Debug\AppManifest.xaml" archivePath="AppManifest.xaml" lastWriteTime="19.01.2015 22:06:38" />
-  <file source="C:\Users\user\Desktop\HI\Windows Phone 8 Project\EnterPage\Bin\Debug\Properties\WMAppManifest.xml" archivePath="Properties\WMAppManifest.xml" lastWriteTime="24.03.2015 10:13:48" />
+  <file source="C:\Users\user\Desktop\HI\Windows Phone 8 Project\EnterPage\Bin\Debug\Properties\WMAppManifest.xml" archivePath="Properties\WMAppManifest.xml" lastWriteTime="09.03.2015 17:09:34" />
   <file source="C:\Program Files\Microsoft SDKs\Windows Phone\v8.1\Libraries\Microsoft.Phone.Controls.dll" archivePath="Microsoft.Phone.Controls.dll" lastWriteTime="18.04.2014 5:36:48" />
   <file source="C:\Users\user\Desktop\HI\Windows Phone 8 Project\packages\WPtoolkit.4.2013.08.16\lib\wp8\Microsoft.Phone.Controls.Toolkit.dll" archivePath="Microsoft.Phone.Controls.Toolkit.dll" lastWriteTime="19.01.2015 22:08:49" />
-  <file source="C:\Users\user\Desktop\HI\Windows Phone 8 Project\ScheduledTaskAgent1\Bin\Debug\ScheduledTaskAgent1.dll" archivePath="ScheduledTaskAgent1.dll" lastWriteTime="24.03.2015 10:08:48" />
+  <file source="C:\Users\user\Desktop\HI\Windows Phone 8 Project\ScheduledTaskAgent1\Bin\Debug\ScheduledTaskAgent1.dll" archivePath="ScheduledTaskAgent1.dll" lastWriteTime="20.01.2015 14:55:54" />
   <file source="C:\Users\user\Desktop\HI\Windows Phone 8 Project\EnterPage\Resources\ic.png" archivePath="Resources\ic.png" lastWriteTime="19.01.2015 22:06:30" />
   <file source="C:\Users\user\Desktop\HI\Windows Phone 8 Project\EnterPage\Resources\var7(1).png" archivePath="Resources\var7(1).png" lastWriteTime="19.01.2015 22:06:32" />
-  <file source="C:\Users\user\Desktop\HI\Windows Phone 8 Project\EnterPage\Bin\Debug\Properties\WMAppManifest.xml" archivePath="WMAppManifest.xml" lastWriteTime="24.03.2015 10:13:48" />
-  <file source="C:\Users\user\Desktop\HI\Windows Phone 8 Project\EnterPage\obj\Debug\MDILProjectFiles.xml" archivePath="MDILProjectFiles.xml" lastWriteTime="24.03.2015 10:13:48" />
+  <file source="C:\Users\user\Desktop\HI\Windows Phone 8 Project\EnterPage\Bin\Debug\Properties\WMAppManifest.xml" archivePath="WMAppManifest.xml" lastWriteTime="09.03.2015 17:09:34" />
+  <file source="C:\Users\user\Desktop\HI\Windows Phone 8 Project\EnterPage\obj\Debug\MDILProjectFiles.xml" archivePath="MDILProjectFiles.xml" lastWriteTime="09.03.2015 17:09:34" />
   <file source="C:\Users\user\Desktop\HI\Windows Phone 8 Project\EnterPage\Bin\Debug\AppxManifest.xml" archivePath="AppxManifest.xml" lastWriteTime="04.03.2015 14:55:00" />
 </xapCache>
