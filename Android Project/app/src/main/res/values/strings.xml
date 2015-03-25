@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Hot-Ice</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="provider_gps">GPS</string>
+    <string name="provider_network">Network</string>
+    <string name="location_settings">Location settings</string>
+
+    <string name="page">Page:</string>
+    <string name="screen_two">screen_two</string>
+    <string name="screen_three">screen_three</string>
+
+    <color name="navpage_color">#CC7722</color>
+    <color name="sec_color">#FFE5B4</color>
+    <color name="text_color">#FF80461B</color>
+    <color name="white">#FFFFFFFF</color>
+
+    <item name="blue" type="color">#CC7722</item>
+    <string name="drawer_open">Open navigation drawer</string>
+    <string name="drawer_close">Close navigation drawer</string>
+
+    <string name="title_activity_registration_page">RegistrationPage</string>
+    <string name="title_activity_action_page">ActionPage</string>
+    <string name="title_activity_forgot_password_page">ForgotPasswordPage</string>
+    <string name="title_activity_enter_page">EnterPage</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_friends__fragment">Friends_Fragment</string>
+    <string name="label1">Profile</string>
+    <string name="label2">Friends</string>
+    <string name="label3">Requests</string>
+    <string name="action_search">Search</string>
+    <string name="title_activity_main_page">MainPage</string>
+
+
+    <string-array name="screen_array">
+        <item>Profile</item>
+        <item>Friends</item>
+        <item>Requests</item>
+    </string-array>
+    <string name="title_activity_resolution_page">ResolutionPage</string>
+</resources>

@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
 #include <sys/stat.h>
@@ -8,15 +9,17 @@
 #define MAXSIZEDOUBLE 20
 #define MAXSIZENAME 20
 #define MAXSIZESTATUS 256
+#define MAXSIZEREQUEST 900
+#define ADD_SIZE 20
 
 // СПЕЦИАЛЬНЫЕ АЛГОРИТМЫ //////////////////////////////////////////////////
 
 int DeleteFriend(char *path, char *user, char *password, char *userfriend)
 {
-	char mydir[strlen(path)+strlen(user)+20];
-	char frienddir[strlen(path)+strlen(userfriend)+20];
-	char mydir_1[strlen(path)+strlen(user)+20];
-	char frienddir_1[strlen(path)+strlen(userfriend)+20];
+	char mydir[strlen(path)+strlen(user)+ADD_SIZE];
+	char frienddir[strlen(path)+strlen(userfriend)+ADD_SIZE];
+	char mydir_1[strlen(path)+strlen(user)+ADD_SIZE];
+	char frienddir_1[strlen(path)+strlen(userfriend)+ADD_SIZE];
 	char mypassword[MAXSIZEPASSWORD];
 
 	strcpy(mydir,path);
@@ -54,7 +57,7 @@ int DeleteFriend(char *path, char *user, char *password, char *userfriend)
 		return 3;
 	}
 
-	char text[900];
+	char text[MAXSIZEREQUEST];
 	strcat(mydir,"/friends.txt");
 
 	FILE *f = fopen(mydir,"r");
@@ -81,7 +84,7 @@ int DeleteFriend(char *path, char *user, char *password, char *userfriend)
 	}
 	Write(path, user, text, 5);
 
-	char text2[900];
+	char text2[MAXSIZEREQUEST];
 	strcat(frienddir,"/friends.txt");
 
 	FILE *f2 = fopen(frienddir,"r");
@@ -107,7 +110,7 @@ int DeleteFriend(char *path, char *user, char *password, char *userfriend)
 	}
 	Write(path, userfriend, text2, 5);
 
-	char text3[900];
+	char text3[MAXSIZEREQUEST];
 	strcat(mydir_1,"/potential.txt");
 
 	FILE *f3 = fopen(mydir_1,"r");
@@ -133,7 +136,7 @@ int DeleteFriend(char *path, char *user, char *password, char *userfriend)
 	}
 	Write(path, user, text3, 7);
 
-	char text4[900];
+	char text4[MAXSIZEREQUEST];
 	strcat(frienddir_1,"/potential.txt");
 
 	FILE *f4 = fopen(frienddir_1,"r");
@@ -163,7 +166,7 @@ int DeleteFriend(char *path, char *user, char *password, char *userfriend)
 
 void Write(char *path, char *user, char *text, int flag)
 {
-	char dir[strlen(path)+strlen(user)+21];
+	char dir[strlen(path)+strlen(user)+ADD_SIZE];
 	strcpy(dir,path);
 	strcat(dir,"/");
 	strcat(dir,user);
@@ -191,6 +194,9 @@ void Write(char *path, char *user, char *text, int flag)
 		case 7: 
 			strcat(dir,"/potential.txt");
 			break;
+		case 8: 
+			strcat(dir,"/people.txt");
+			break;
 	}	
 
 	FILE *file = fopen(dir,"w");
@@ -200,7 +206,7 @@ void Write(char *path, char *user, char *text, int flag)
 
 int ListPotential(char *path, char *user, char *password, char *friends)
 {
-	char dir[strlen(path)+strlen(user)+20];
+	char dir[strlen(path)+strlen(user)+ADD_SIZE];
 	char mypassword[MAXSIZEPASSWORD];
 	
 	strcpy(dir,path);
@@ -253,7 +259,7 @@ int ListPotential(char *path, char *user, char *password, char *friends)
 
 int ListFriends(char *path, char *user, char *password, char *friends)
 {
-	char dir[strlen(path)+strlen(user)+20];
+	char dir[strlen(path)+strlen(user)+ADD_SIZE];
 	char mypassword[MAXSIZEPASSWORD];
 	
 	strcpy(dir,path);
@@ -306,9 +312,9 @@ int ListFriends(char *path, char *user, char *password, char *friends)
 
 int AddFriend(char *path, char *user, char *password, char *userfriend)
 {
-	char mydir[strlen(path)+strlen(user)+20];
-	char mydir_1[strlen(path)+strlen(user)+20];
-	char frienddir[strlen(path)+strlen(userfriend)+20];
+	char mydir[strlen(path)+strlen(user)+ADD_SIZE];
+	char mydir_1[strlen(path)+strlen(user)+ADD_SIZE];
+	char frienddir[strlen(path)+strlen(userfriend)+ADD_SIZE];
 	char mypassword[MAXSIZEPASSWORD];
 
 	strcpy(mydir,path);
@@ -368,7 +374,7 @@ int AddFriend(char *path, char *user, char *password, char *userfriend)
 		fprintf(file,"%s\n",user);
 		fclose(file);
 	
-		char text[900];
+		char text[MAXSIZEREQUEST];
 		strcat(mydir_1,"/potential.txt");
 
 		FILE *f = fopen(mydir_1,"r");
@@ -411,16 +417,17 @@ int AddFriend(char *path, char *user, char *password, char *userfriend)
 
 int AddUser(char *path, char *user, char *password, char *email)
 {
-	char dir[strlen(path)+strlen(user)+20];
+	char dir[strlen(path)+strlen(user)+ADD_SIZE];
 	strcpy(dir,path);
 	strcat(dir,"/");
 	strcat(dir,user);
 	
-	char dirphoto[100];
-	strcpy(dirphoto,"/var/www/html/photos/");
-	strcat(dirphoto,user);
-	strcat(dirphoto,".jpg");
-	char *nophoto = "/home/no_photo.jpg";
+	char cpphoto[100];
+	strcpy(cpphoto,"cp /home/no_photo.jpg /var/www/html/photos/");
+	strcat(cpphoto,user);
+	strcat(cpphoto,".jpg");
+
+	system(cpphoto);
 
 	int a = access(dir, 0); 
 	if(a!=0)
@@ -435,6 +442,7 @@ int AddUser(char *path, char *user, char *password, char *email)
 		char *status = "@";
 		Write(path, user, status, 6);
 		Write(path, user, text, 7);
+		Write(path, user, text, 8);
 		return 0; 
 	}
 	else
@@ -445,7 +453,7 @@ int AddUser(char *path, char *user, char *password, char *email)
 
 int CheckUser(char *path, char *user, char *password)
 {
-	char dir[strlen(path)+strlen(user)+20];
+	char dir[strlen(path)+strlen(user)+ADD_SIZE];
 	strcpy(dir,path);
 	strcat(dir,"/");
 	strcat(dir,user);
@@ -456,7 +464,7 @@ int CheckUser(char *path, char *user, char *password)
 		return 1; 
 	}
 
-	char pasfile[strlen(dir)+13];
+	char pasfile[strlen(dir)+ADD_SIZE];
 	strcpy(pasfile,dir);
 	strcat(pasfile,"/password.txt");
 
@@ -500,7 +508,7 @@ void dateANDtime(char *text, char *date)
 
 int isHere(char *path, char *user, char *file, char *text)
 {
-	char dir[strlen(path)+strlen(user)+21];
+	char dir[strlen(path)+strlen(user)+ADD_SIZE];
 	char newtext[MAXSIZENAME];
 	strcpy(dir,path);
 	strcat(dir,"/");
@@ -535,7 +543,7 @@ int isHere(char *path, char *user, char *file, char *text)
 
 void Read(char *path, char *user, char *text, int flag)
 {
-	char dir[strlen(path)+strlen(user)+21];
+	char dir[strlen(path)+strlen(user)+ADD_SIZE];
 	strcpy(dir,path);
 	strcat(dir,"/");
 	strcat(dir,user);
@@ -562,6 +570,9 @@ void Read(char *path, char *user, char *text, int flag)
 			break;
 		case 7: 
 			strcat(dir,"/potential.txt");
+			break;
+		case 8: 
+			strcat(dir,"/people.txt");
 			break;
 	}
 	
@@ -761,6 +772,14 @@ int first2(char * str)
    	{
       		return 11;
    	}
+	if((str[0]=='<') && (str[1]=='l') && (str[2]=='h') && (str[3]=='/'))
+   	{
+      		return 12;
+   	}
+	if((str[0]=='<') && (str[1]=='f') && (str[2]=='d') && (str[3]=='/'))
+   	{
+      		return 13;
+   	}
 	return 0;
 }
 
@@ -785,7 +804,7 @@ void DO(char *str, char *request)
    	if(m == 1)
 	{
 
-      		pars_3(str,user,x,y);
+      	pars_3(str,user,x,y);
 		char dir[strlen(path)+strlen(user)];
 		strcpy(dir,path);
 		strcat(dir,"/");
@@ -805,15 +824,15 @@ void DO(char *str, char *request)
    	}
    	if(m == 2)
 	{
-      		pars_1(str,userfriend);
+      	pars_1(str,userfriend);
 		char dir[strlen(path)+strlen(userfriend)];
 		strcpy(dir,path);
 		strcat(dir,"/");
 		strcat(dir,userfriend);
 
 		int n = access(dir, 0);
-      		if(n==0)
-      		{	
+      	if(n==0)
+      	{	
 			Read(path, userfriend, x, 1);
 			Read(path, userfriend, y, 2);
 			struct stat st;
@@ -821,7 +840,7 @@ void DO(char *str, char *request)
 			strcat(dir,"/longitude.txt");
 			stat(dir,&st);
 			dateANDtime((char*)ctime(&st.st_mtime),date);
-         		sprintf(request, "<fc/%s/%s/%s/%s>\0", userfriend, x, y,date); 
+         	sprintf(request, "<fc/%s/%s/%s/%s>\0", userfriend, x, y,date); 
       	}
       	else
       	{
@@ -979,4 +998,49 @@ void DO(char *str, char *request)
 			break;
 		}
 	}
+	if(m == 12)
+	{
+		pars_3(str,user,x,y);
+		char people[900];
+		
+		char ficha[100];
+		strcpy(ficha,"./ficha ");
+		strcat(ficha,user);
+		strcat(ficha," ");
+		strcat(ficha,x);
+		strcat(ficha," ");
+		strcat(ficha,y);
+
+		system(ficha);
+
+		printf("here");
+		Read(path, user, people, 8);
+		sprintf(request, "<lh/%s>\0",people);
+	}
+	if(m == 13)
+	{
+      	pars_1(str,userfriend);
+		char dir[strlen(path)+strlen(userfriend)];
+		strcpy(dir,path);
+		strcat(dir,"/");
+		strcat(dir,userfriend);
+
+		int n = access(dir, 0);
+      	if(n==0)
+      	{	
+			Read(path, userfriend, x, 1);
+			Read(path, userfriend, y, 2);
+			Read(path, userfriend, status, 6);
+			struct stat st;
+			char date[25];
+			strcat(dir,"/longitude.txt");
+			stat(dir,&st);
+			dateANDtime((char*)ctime(&st.st_mtime),date);
+         	sprintf(request, "<fd/%s/%s/%s/%s/%s>\0", userfriend, x, y,date,status); 
+      	}
+		else
+      	{
+        	sprintf(request, "<fd/not>\0");
+      	}
+	} 
 }

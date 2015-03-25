@@ -23,14 +23,14 @@
 
         <Grid HorizontalAlignment="Left" Height="67" VerticalAlignment="Top" Width="480" Background="#CC7722">
             <Image Source="/Resources/icona.png" Height="55" Margin="17,-17,395,0" Stretch="UniformToFill"/>
-            <TextBlock TextWrapping="Wrap" Margin="93,14,10,6" FontFamily="Segoe WP SemiLight" FontSize="26" Text="ВОССТАНОВЛЕНИЕ ПАРОЛЯ"/>
+            <TextBlock TextWrapping="Wrap" Margin="93,14,10,6" FontFamily="Segoe WP SemiLight" FontSize="26" Text="PASSWORD RECOVERY"/>
         </Grid>
 
         <!--ContentPanel – поместите здесь дополнительное содержимое-->
         <Grid x:Name="ContentPanel" Margin="12,70,12,249" Grid.Row="1">
             <TextBox x:Name="Username" HorizontalAlignment="Left" Height="72" Margin="0,30,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="456" BorderBrush="#BFDADADA" MaxLength="20"/>
-            <TextBlock HorizontalAlignment="Left" Margin="14,5,0,0" TextWrapping="Wrap" Text="Введите логин" VerticalAlignment="Top" Foreground="#FF80461B"/>
-            <Button Content="Напомнить мой пароль" HorizontalAlignment="Left" Margin="0,107,0,0" VerticalAlignment="Top" Foreground="White" BorderBrush="#BFDADADA" Height="72" Background="#A5CC7722" Width="456" Click="Button_Click"/>
+            <TextBlock HorizontalAlignment="Left" Margin="14,5,0,0" TextWrapping="Wrap" Text="Enter your nickname" VerticalAlignment="Top" Foreground="#FF80461B"/>
+            <Button Content="Forgot my password" HorizontalAlignment="Left" Margin="0,107,0,0" VerticalAlignment="Top" Foreground="White" BorderBrush="#BFDADADA" Height="72" Background="#A5CC7722" Width="456" Click="Button_Click"/>
         </Grid>
     </Grid>
 

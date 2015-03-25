@@ -24,7 +24,7 @@ namespace EnterPage
 
             if (request.isConnecting() == false)
             {
-                MessageBox.Show("Неудаётся подключиться к серверу\nВозможно отсутствует подключение к интернету");
+                MessageBox.Show("Can't connect to the server\nPerhaps there is no internet connection");
                 IsolatedStorageSettings.ApplicationSettings.Save();
                 Application.Current.Terminate();
             }
@@ -43,11 +43,11 @@ namespace EnterPage
                 if (value == null)
                 {
                     Username.Text = string.Empty;
-                    MessageBox.Show("Не удалось отправить заявку на восстановление пароля\nПроверьте правильность вводимых данных.");
+                    MessageBox.Show("Failed to send a request for password recovery\nverify the input data.");
                 }
                 else
                 {
-                    MessageBox.Show("Мы отправили Ваш пароль по адресу: "+value+"\nЕсли сообщение не пришло, проверьте папку со спамом");
+                    MessageBox.Show("We have sent your password to the address: " + value + "\nIf the message has not arrived, please check your spam folder");
                     Username.Text = string.Empty;
                 }
             }
@@ -60,7 +60,7 @@ namespace EnterPage
         {
             if (String.IsNullOrWhiteSpace(Username.Text))
             {
-                MessageBox.Show("Пожалуйста, введите имя пользователя");
+                MessageBox.Show("Please enter your nickname");
                 return false;
             }
 

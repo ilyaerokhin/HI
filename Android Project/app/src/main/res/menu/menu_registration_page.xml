@@ -1,0 +1,10 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.hot_ice.hot_ice.RegistrationPage">
+
+    <item android:id="@id/action_bar"
+        android:title="text"
+        android:icon="@drawable/ic"
+        android:showAsAction="always|withText" />
+</menu>

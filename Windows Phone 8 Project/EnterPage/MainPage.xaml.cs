@@ -28,7 +28,7 @@ namespace EnterPage
 
             if (request.isConnecting() == false)
             {
-                MessageBox.Show("Неудаётся подключиться к серверу\nВозможно отсутствует подключение к интернету");
+                MessageBox.Show("Can't connect to the server\nPerhaps there is no internet connection");
                 IsolatedStorageSettings.ApplicationSettings.Save();
                 Application.Current.Terminate();
             }
@@ -67,21 +67,21 @@ namespace EnterPage
 
                 if (value == 1)
                 {
-                    MessageBox.Show("Неверное имя пользователя");
+                    MessageBox.Show("Incorrect username");
                     Username.Text = string.Empty;
                     Password.Password = string.Empty;
                 }
 
                 if (value == 2)
                 {
-                    MessageBox.Show("Неверный пароль");
+                    MessageBox.Show("Incorrect password");
                     Username.Text = string.Empty;
                     Password.Password = string.Empty;
                 }
 
                 if (value < 0)
                 {
-                    MessageBox.Show("Попробуй ещё раз");
+                    MessageBox.Show("Try again");
                     Refresh();
                 }
 
@@ -96,13 +96,7 @@ namespace EnterPage
         {
             if (String.IsNullOrWhiteSpace(Username.Text))
             {
-                MessageBox.Show("Пожалуйста, введите имя пользователя");
-                return false;
-            }
-
-            if (Username.Text.Contains(" "))
-            {
-                MessageBox.Show("Пожалуйста, введите имя пользователя без пробелов");
+                MessageBox.Show("Please enter nickname");
                 return false;
             }
 
@@ -112,13 +106,7 @@ namespace EnterPage
         {
             if (String.IsNullOrWhiteSpace(Password.Password))
             {
-                MessageBox.Show("Пожалуйста, введите пароль");
-                return false;
-            }
-
-            if (Password.Password.Contains("/") || Password.Password.Contains("<") || Password.Password.Contains(">"))
-            {
-                MessageBox.Show("Пожалуйста, не используйте символы <,>,/");
+                MessageBox.Show("Please enter password");
                 return false;
             }
 
@@ -128,7 +116,7 @@ namespace EnterPage
         {
             e.Cancel = true;
             Task.Delay(100);
-            if (MessageBox.Show("Вы хотите покинуть приложение?", "Выход", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
+            if (MessageBox.Show("Do you want to leave the application?", "Exit", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
             {
                 IsolatedStorageSettings.ApplicationSettings.Save();
                 Application.Current.Terminate();
@@ -148,7 +136,7 @@ namespace EnterPage
                 int value = request.SetCoordinates(User.Name,User.Latitude,User.Longitude);
                 if (value != 0)
                 {
-                    MessageBox.Show("Ошибка при старте, попробуйте войти ещё раз");
+                    MessageBox.Show("Error, try again");
                     Refresh();
                 }
                 watcher.Stop();

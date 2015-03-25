@@ -24,17 +24,17 @@
 
         <Grid HorizontalAlignment="Left" Height="67" VerticalAlignment="Top" Width="480" Background="#CC7722">
             <Image Source="/Resources/icona.png" Height="55" Margin="17,-17,395,0" Stretch="UniformToFill"/>
-            <TextBlock TextWrapping="Wrap" Margin="93,14,247,5" FontFamily="Segoe WP SemiLight" FontSize="26" Text="ВХОД"/>
+            <TextBlock TextWrapping="Wrap" Margin="93,14,247,5" FontFamily="Segoe WP SemiLight" FontSize="26" Text="LOG ON"/>
         </Grid>
         
         <Grid x:Name="ContentPanel" Margin="12,70,12,321" Grid.Row="1">
             <TextBox x:Name="Username" HorizontalAlignment="Left" Height="72" Margin="0,30,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="456" BorderBrush="#BFDADADA" Foreground="Black" MaxLength="20"/>
-            <TextBlock HorizontalAlignment="Left" Margin="14,5,0,0" TextWrapping="Wrap" Text="Введите логин" VerticalAlignment="Top" Foreground="#FF80461B"/>
+            <TextBlock HorizontalAlignment="Left" Margin="14,5,0,0" TextWrapping="Wrap" Text="Enter nickname" VerticalAlignment="Top" Foreground="#FF80461B"/>
             <PasswordBox x:Name="Password" HorizontalAlignment="Left" Height="72" Margin="0,125,0,0" VerticalAlignment="Top" Width="456" BorderBrush="#BFDADADA" MaxLength="20"/>
-            <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Введите пароль" VerticalAlignment="Top" Margin="14,100,0,0" Foreground="#FF80461B"/>
-            <Button x:Name="EnterButton" Content="Войти" HorizontalAlignment="Left" Margin="246,197,0,0" VerticalAlignment="Top" Click="EnterButton_Click" FontSize="22.667" Width="200" Foreground="White" BorderBrush="#BFDADADA" Background="#A8CC7722"/>
-            <Button Content="Регистрация" HorizontalAlignment="Left" Margin="10,197,0,0" VerticalAlignment="Top" Click="RegButton_Click" Width="200" Foreground="White" BorderBrush="#BFDADADA" Background="#A1CE7722"/>
-            <HyperlinkButton Content="Забыли пароль?" HorizontalAlignment="Left" Margin="31,269,0,0" VerticalAlignment="Top" NavigateUri="/ForgetPage.xaml" FontSize="18" Foreground="#FF80461B"/>
+            <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Enter password" VerticalAlignment="Top" Margin="14,100,0,0" Foreground="#FF80461B"/>
+            <Button x:Name="EnterButton" Content="Log on" HorizontalAlignment="Left" Margin="246,197,0,0" VerticalAlignment="Top" Click="EnterButton_Click" FontSize="22.667" Width="200" Foreground="White" BorderBrush="#BFDADADA" Background="#A8CC7722"/>
+            <Button Content="Check in" HorizontalAlignment="Left" Margin="10,197,0,0" VerticalAlignment="Top" Click="RegButton_Click" Width="200" Foreground="White" BorderBrush="#BFDADADA" Background="#A1CE7722"/>
+            <HyperlinkButton Content="Forget password?" HorizontalAlignment="Left" Margin="31,269,0,0" VerticalAlignment="Top" NavigateUri="/ForgetPage.xaml" FontSize="18" Foreground="#FF80461B"/>
         </Grid>
      
         <!--Раскомментируйте, чтобы увидеть сетку выравнивания и выровнять

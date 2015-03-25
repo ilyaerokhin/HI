@@ -29,7 +29,7 @@ namespace EnterPage
 
             if (request.isConnecting() == false)
             {
-                MessageBox.Show("Неудаётся подключиться к серверу\nВозможно отсутствует подключение к интернету");
+                MessageBox.Show("Can't connect to the server\nPerhaps there is no internet connection");
                 IsolatedStorageSettings.ApplicationSettings.Save();
                 Application.Current.Terminate();
             }
@@ -45,7 +45,7 @@ namespace EnterPage
             {
                 if (!PublicData.IsValidEmail(Email.Text))
                 {
-                    MessageBox.Show("Некорректный E-mail");
+                    MessageBox.Show("Incorrect E-mail");
                     Username.Text = string.Empty;
                     Password.Password = string.Empty;
                     Email.Text = string.Empty;
@@ -78,7 +78,7 @@ namespace EnterPage
 
                 if (value != 0)
                 {
-                    MessageBox.Show("Попробуй ещё раз");
+                    MessageBox.Show("Try again");
                     Refresh();
                 }
 
@@ -94,13 +94,19 @@ namespace EnterPage
         {
             if (String.IsNullOrWhiteSpace(Username.Text))
             {
-                MessageBox.Show("Пожалуйста, введите имя пользователя");
+                MessageBox.Show("Please enter username");
                 return false;
             }
 
             if (Username.Text.Contains(" "))
             {
-                MessageBox.Show("Пожалуйста, введите имя пользователя без пробелов");
+                MessageBox.Show("Please enter a username without spaces");
+                return false;
+            }
+
+            if (Username.Text.Contains("/") || Username.Text.Contains("<") || Username.Text.Contains(">"))
+            {
+                MessageBox.Show("Please do not use symbols <,>,/");
                 return false;
             }
 
@@ -110,7 +116,7 @@ namespace EnterPage
         {
             if (String.IsNullOrWhiteSpace(Email.Text))
             {
-                MessageBox.Show("Пожалуйста, введите E-mail");
+                MessageBox.Show("Please enter E-mail");
                 return false;
             }
 
@@ -120,13 +126,13 @@ namespace EnterPage
         {
             if (String.IsNullOrWhiteSpace(Password.Password))
             {
-                MessageBox.Show("Пожалуйста, введите пароль");
+                MessageBox.Show("Please enter password");
                 return false;
             }
 
             if (Password.Password.Contains("/") || Password.Password.Contains("<") || Password.Password.Contains(">"))
             {
-                MessageBox.Show("Пожалуйста, не используйте символы <,>,/");
+                MessageBox.Show("Please do not use symbols <,>,/");
                 return false;
             }
 
@@ -147,7 +153,7 @@ namespace EnterPage
                 int value = request.SetCoordinates(User.Name, User.Latitude, User.Longitude);
                 if (value != 0)
                 {
-                    MessageBox.Show("Ошибка при старте, попробуйте войти ещё раз");
+                    MessageBox.Show("Error when starting, try to enter again");
                     Refresh();
                 }                                         // закрываем соединение
                 watcher.Stop();

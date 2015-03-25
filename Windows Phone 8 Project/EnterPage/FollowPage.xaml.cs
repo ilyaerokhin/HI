@@ -54,7 +54,7 @@ namespace EnterPage
 
             if (request.isConnecting() == false)
             {
-                MessageBox.Show("Неудаётся подключиться к серверу\nВозможно отсутствует подключение к интернету");
+                MessageBox.Show("Can't connect to the server\nPerhaps there is no internet connection");
                 IsolatedStorageSettings.ApplicationSettings.Save();
                 Application.Current.Terminate();
             }
@@ -67,7 +67,7 @@ namespace EnterPage
             Colors.blue = 119;
             Colors.green = 34;
 
-            string value = request.GetFrendCoordinates(PublicData.Search_friend);                                             // получение ответа сервера
+            string value = request.GetFrendCoordinates(PublicData.Search_friend);              // получение ответа сервера
             string[] data = value.Split(new Char[] { '/' });                // выдёргиваем строки из ответа
 
             lat = Convert.ToDouble(data[0]);
@@ -157,7 +157,7 @@ namespace EnterPage
                 Colors.red++;
             }
 
-            Top.Background = new System.Windows.Media.SolidColorBrush(Color.FromArgb(255, Colors.red, Colors.green, Colors.blue));
+            ContentPanel.Background = new System.Windows.Media.SolidColorBrush(Color.FromArgb(255, Colors.red, Colors.green, Colors.blue));
         }
         void OnTimerBlueTick(Object sender, EventArgs args)
         {
@@ -175,7 +175,7 @@ namespace EnterPage
                 Colors.blue++;
             }
 
-            Top.Background = new System.Windows.Media.SolidColorBrush(Color.FromArgb(255, Colors.red, Colors.green, Colors.blue));
+            ContentPanel.Background = new System.Windows.Media.SolidColorBrush(Color.FromArgb(255, Colors.red, Colors.green, Colors.blue));
         }
         void OnTimerGreenTick(Object sender, EventArgs args)
         {
@@ -194,7 +194,7 @@ namespace EnterPage
             }
 
 
-            Top.Background = new System.Windows.Media.SolidColorBrush(Color.FromArgb(255, Colors.red, Colors.green, Colors.blue));
+            ContentPanel.Background = new System.Windows.Media.SolidColorBrush(Color.FromArgb(255, Colors.red, Colors.green, Colors.blue));
         }
         private void Change_Image(double length, double priv, double first)
         {

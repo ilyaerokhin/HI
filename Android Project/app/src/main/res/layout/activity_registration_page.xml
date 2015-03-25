@@ -1,0 +1,77 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/sec_color"
+    tools:context="com.hot_ice.hot_ice.RegistrationPage">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Enter name"
+        android:id="@+id/NameView"
+        android:background="@color/sec_color"
+        android:layout_marginTop="30dp"
+        android:textColor="#ff80461b" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:ems="10"
+        android:id="@+id/NameEdit"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="10dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Enter password"
+        android:id="@+id/PasswordView"
+        android:background="@color/sec_color"
+        android:layout_marginTop="10dp"
+        android:textColor="@color/text_color"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textPassword"
+        android:ems="10"
+        android:id="@+id/PasswordEdit"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="10dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Enter email"
+        android:id="@+id/EmailView"
+        android:background="@color/sec_color"
+        android:layout_marginTop="10dp"
+        android:textColor="@color/text_color"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textEmailAddress"
+        android:ems="10"
+        android:id="@+id/EmailEdit"
+        android:layout_marginTop="10dp" />
+
+    <Button
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:text="Sing in"
+        android:id="@+id/SingInButton"
+        android:background="@color/navpage_color"
+        android:onClick="onSingInButton"
+        android:layout_gravity="right"
+        android:layout_marginTop="10dp"
+        android:textColor="@color/white" />
+
+</LinearLayout>
+

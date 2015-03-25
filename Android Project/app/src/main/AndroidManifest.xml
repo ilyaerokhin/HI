@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.hot_ice.hot_ice" >
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/ic"
+        android:label="@string/app_name"
+        android:theme="@style/Theme.Styled" >
+        <activity
+            android:name=".NavigationPage"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".RegistrationPage"
+            android:label="REGISTRATION" >
+        </activity>
+        <activity
+            android:name=".ForgotPasswordPage"
+            android:label="@string/title_activity_forgot_password_page" >
+        </activity>
+        <activity
+            android:name=".MainPage"
+            android:label="LOG IN" >
+        </activity>
+        <activity
+            android:name=".ActionPage"
+            android:label="@string/title_activity_main_page" >
+        </activity>
+        <activity
+            android:name=".ResolutionPage"
+            android:label="@string/title_activity_resolution_page" >
+        </activity>
+    </application>
+
+</manifest>

@@ -51,38 +51,16 @@ namespace EnterPage
 
         static public string latlng2distance(double lat1, double long1, double lat2, double long2)
         {
-            //радиус Земли
-            double R = 6372795;
-
-            //перевод коордитат в радианы
-            lat1 *= Math.PI / 180;
-            lat2 *= Math.PI / 180;
-            long1 *= Math.PI / 180;
-            long2 *= Math.PI / 180;
-
-            //вычисление косинусов и синусов широт и разницы долгот
-            double cl1 = Math.Cos(lat1);
-            double cl2 = Math.Cos(lat2);
-            double sl1 = Math.Sin(lat1);
-            double sl2 = Math.Sin(lat2);
-            double delta = long2 - long1;
-            double cdelta = Math.Cos(delta);
-            double sdelta = Math.Sin(delta);
-
-            //вычисления длины большого круга
-            double y = Math.Sqrt(Math.Pow(cl2 * sdelta, 2) + Math.Pow(cl1 * sl2 - sl1 * cl2 * cdelta, 2));
-            double x = sl1 * sl2 + cl1 * cl2 * cdelta;
-            double ad = Math.Atan2(y, x);
-            double dist = ad * R; //расстояние между двумя координатами в метрах
-
+            
+            double dist = latlng2distance_meters(lat1,long1,lat2,long2);
 
             if ((int)dist >= 1000)
             {
-                return (int)dist / 1000 + " " + pluralForm((int)dist / 1000, "километр", "километра", "километров");
+                return (int)dist / 1000 + " " + pluralForm((int)dist / 1000, "km", "kms", "kms");
             }
             else
             {
-                return (int)dist + " " + pluralForm((int)dist, "метр", "метра", "метров");
+                return (int)dist + " " + pluralForm((int)dist, "m", "ms", "ms");
             }
         }
 
@@ -118,38 +96,16 @@ namespace EnterPage
 
         static public string latlng2distance_moreinfo(double lat1, double long1, double lat2, double long2)
         {
-            //радиус Земли
-            double R = 6372795;
-
-            //перевод коордитат в радианы
-            lat1 *= Math.PI / 180;
-            lat2 *= Math.PI / 180;
-            long1 *= Math.PI / 180;
-            long2 *= Math.PI / 180;
-
-            //вычисление косинусов и синусов широт и разницы долгот
-            double cl1 = Math.Cos(lat1);
-            double cl2 = Math.Cos(lat2);
-            double sl1 = Math.Sin(lat1);
-            double sl2 = Math.Sin(lat2);
-            double delta = long2 - long1;
-            double cdelta = Math.Cos(delta);
-            double sdelta = Math.Sin(delta);
-
-            //вычисления длины большого круга
-            double y = Math.Sqrt(Math.Pow(cl2 * sdelta, 2) + Math.Pow(cl1 * sl2 - sl1 * cl2 * cdelta, 2));
-            double x = sl1 * sl2 + cl1 * cl2 * cdelta;
-            double ad = Math.Atan2(y, x);
-            double dist = ad * R; //расстояние между двумя координатами в метрах
+            double dist = latlng2distance_meters(lat1,long1,lat2,long2);
 
 
             if ((int)dist >= 1000)
             {
-                return (dist / 1000).ToString("#.##") + " " + pluralForm((int)dist / 1000, "километр", "километра", "километров");
+                return (dist / 1000).ToString("#.##") + " " + pluralForm((int)dist / 1000, "km", "kms", "kms");
             }
             else
             {
-                return (int)dist + " " + pluralForm((int)dist, "метр", "метра", "метров");
+                return (int)dist + " " + pluralForm((int)dist, "m", "ms", "ms");
             }
         }
 
@@ -177,24 +133,24 @@ namespace EnterPage
                 {
                     if (diff1.TotalSeconds < 60)// возвращение строки 
                     {
-                        result = "сейчас";
+                        result = "now";
                         return result;
                     }
                     else
                         if (diff1.TotalMinutes < 60)
                         {
-                            result = (int)diff1.TotalMinutes + " " + PublicData.pluralForm((int)diff1.TotalMinutes, "минуту", "минуты", "минут") + " назад";
+                            result = (int)diff1.TotalMinutes + " " + PublicData.pluralForm((int)diff1.TotalMinutes, "minute", "minutes", "minutes") + " ago";
                             return result;
                         }
                         else if (diff1.TotalHours < 24)
                         {
-                            result = (int)diff1.TotalHours + " " + PublicData.pluralForm((int)diff1.TotalHours, "час", "часа", "часов") + " назад";
+                            result = (int)diff1.TotalHours + " " + PublicData.pluralForm((int)diff1.TotalHours, "hour", "hours", "hours") + " ago";
                             return result;
                         }
                         else
                             if (diff1.TotalDays < 365)
                             {
-                                result = (int)diff1.TotalDays + " " + PublicData.pluralForm((int)diff1.TotalDays, "день", "дня", "дней") + " назад";
+                                result = (int)diff1.TotalDays + " " + PublicData.pluralForm((int)diff1.TotalDays, "day", "days", "days") + " ago";
                                 return result;
                             }
                 }
@@ -204,24 +160,24 @@ namespace EnterPage
                     {
                         if (diff1.TotalSeconds - (TimeZoneInfo.Local.BaseUtcOffset.Hours - 4) * 3600 < 60)// возвращение строки 
                         {
-                            result = "сейчас";
+                            result = "now";
                             return result;
                         }
                         else
                             if (diff1.TotalMinutes - (TimeZoneInfo.Local.BaseUtcOffset.Hours - 4) * 60 < 60)
                             {
-                                result = (int)(diff1.TotalMinutes - (TimeZoneInfo.Local.BaseUtcOffset.Hours - 4) * 60) + " " + PublicData.pluralForm((int)(diff1.TotalMinutes - (TimeZoneInfo.Local.BaseUtcOffset.Hours - 4) * 60), "минуту", "минуты", "минут") + " назад";
+                                result = (int)(diff1.TotalMinutes - (TimeZoneInfo.Local.BaseUtcOffset.Hours - 4) * 60) + " " + PublicData.pluralForm((int)(diff1.TotalMinutes - (TimeZoneInfo.Local.BaseUtcOffset.Hours - 4) * 60), "minute", "minutes", "minutes") + " ago";
                                 return result;
                             }
                             else if (diff1.TotalHours - (TimeZoneInfo.Local.BaseUtcOffset.Hours - 4) < 24)
                             {
-                                result = (int)(diff1.TotalHours - (TimeZoneInfo.Local.BaseUtcOffset.Hours - 4)) + " " + PublicData.pluralForm((int)(diff1.TotalHours - (TimeZoneInfo.Local.BaseUtcOffset.Hours - 4)), "час", "часа", "часов") + " назад";
+                                result = (int)(diff1.TotalHours - (TimeZoneInfo.Local.BaseUtcOffset.Hours - 4)) + " " + PublicData.pluralForm((int)(diff1.TotalHours - (TimeZoneInfo.Local.BaseUtcOffset.Hours - 4)), "hour", "hours", "hours") + " ago";
                                 return result;
                             }
                             else
                                 if (diff1.TotalDays - (TimeZoneInfo.Local.BaseUtcOffset.Hours - 4) * 1 / 24 < 365)
                                 {
-                                    result = (int)(diff1.TotalDays - (TimeZoneInfo.Local.BaseUtcOffset.Hours - 4) * 1 / 24) + " " + PublicData.pluralForm((int)(diff1.TotalDays - (TimeZoneInfo.Local.BaseUtcOffset.Hours - 4) * 1 / 24), "день", "дня", "дней") + " назад";
+                                    result = (int)(diff1.TotalDays - (TimeZoneInfo.Local.BaseUtcOffset.Hours - 4) * 1 / 24) + " " + PublicData.pluralForm((int)(diff1.TotalDays - (TimeZoneInfo.Local.BaseUtcOffset.Hours - 4) * 1 / 24), "day", "days", "days") + " ago";
                                     return result;
                                 }
                     }
@@ -237,18 +193,18 @@ namespace EnterPage
                             else
                                 if (diff1.TotalMinutes + (-1) * (TimeZoneInfo.Local.BaseUtcOffset.Hours - 4) * 60 < 60)
                                 {
-                                    result = (int)(diff1.TotalMinutes + (-1) * (TimeZoneInfo.Local.BaseUtcOffset.Hours - 4) * 60) + " " + PublicData.pluralForm((int)(diff1.TotalMinutes + (-1) * (TimeZoneInfo.Local.BaseUtcOffset.Hours - 4) * 60), "минуту", "минуты", "минут") + " назад";
+                                    result = (int)(diff1.TotalMinutes + (-1) * (TimeZoneInfo.Local.BaseUtcOffset.Hours - 4) * 60) + " " + PublicData.pluralForm((int)(diff1.TotalMinutes + (-1) * (TimeZoneInfo.Local.BaseUtcOffset.Hours - 4) * 60), "minute", "minutes", "minutes") + " ago";
                                     return result;
                                 }
                                 else if (diff1.TotalHours + (-1) * (TimeZoneInfo.Local.BaseUtcOffset.Hours - 4) < 24)
                                 {
-                                    result = (int)(diff1.TotalHours + (-1) * (TimeZoneInfo.Local.BaseUtcOffset.Hours - 4)) + " " + PublicData.pluralForm((int)(diff1.TotalHours + (-1) * (TimeZoneInfo.Local.BaseUtcOffset.Hours - 4)), "час", "часа", "часов") + " назад";
+                                    result = (int)(diff1.TotalHours + (-1) * (TimeZoneInfo.Local.BaseUtcOffset.Hours - 4)) + " " + PublicData.pluralForm((int)(diff1.TotalHours + (-1) * (TimeZoneInfo.Local.BaseUtcOffset.Hours - 4)), "hour", "hours", "hours") + " ago";
                                     return result;
                                 }
                                 else
                                     if (diff1.TotalDays + (-1) * (TimeZoneInfo.Local.BaseUtcOffset.Hours - 4) * 1 / 24 < 365)
                                     {
-                                        result = (int)(diff1.TotalDays + (-1) * (TimeZoneInfo.Local.BaseUtcOffset.Hours - 4) * 1 / 24) + " " + PublicData.pluralForm((int)(diff1.TotalDays + (-1) * (TimeZoneInfo.Local.BaseUtcOffset.Hours - 4) * 1 / 24), "день", "дня", "дней") + " назад";
+                                        result = (int)(diff1.TotalDays + (-1) * (TimeZoneInfo.Local.BaseUtcOffset.Hours - 4) * 1 / 24) + " " + PublicData.pluralForm((int)(diff1.TotalDays + (-1) * (TimeZoneInfo.Local.BaseUtcOffset.Hours - 4) * 1 / 24), "day", "days", "days") + " ago";
                                         return result;
                                     }
                         }
@@ -257,7 +213,7 @@ namespace EnterPage
             }
             catch (FormatException)
             {
-                return "нет данных";
+                return "no data";
             }
             return "";
         }

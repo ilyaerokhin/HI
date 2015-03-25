@@ -30,7 +30,7 @@ namespace EnterPage
 
             if (request.isConnecting() == false)
             {
-                MessageBox.Show("Неудаётся подключиться к серверу\nВозможно отсутствует подключение к интернету");
+                MessageBox.Show("Can't connect to the server\nPerhaps there is no internet connection");
                 IsolatedStorageSettings.ApplicationSettings.Save();
                 Application.Current.Terminate();
             }
@@ -56,7 +56,7 @@ namespace EnterPage
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Невозможно удалить ранее созданный сервис:" + ex.Message);
+                    MessageBox.Show("Can't remove a previously created service:" + ex.Message);
                 }
             }
 
@@ -69,7 +69,7 @@ namespace EnterPage
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Невозможно создать сервис:" + ex.Message);
+                MessageBox.Show("Unable to create service:" + ex.Message);
             }
 
         }
@@ -88,7 +88,7 @@ namespace EnterPage
                 int value = request.SetCoordinates(User.Name, User.Latitude, User.Longitude);
                 if (value != 0)
                 {
-                    MessageBox.Show("Ошибка при старте, попробуйте войти ещё раз");
+                    MessageBox.Show("Error when starting, try to enter again");
                     Refresh();
                 }                                         // закрываем соединение
                 watcher.Stop();

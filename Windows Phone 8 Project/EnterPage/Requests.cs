@@ -339,16 +339,50 @@ namespace EnterPage
 
             return str; // friend1/friend2/../friendn/
         }
-
-        public string GetListHere(string user, string x, string y)
+        public string GetPassword(string user)
         {
             if (IsConnect == false)
             {
                 return null; // содинения с сервером нет
             }
 
-            client.Send("<lh/" + user.ToLower() + "/" + x + "/" + y + ">");
+            client.Send("<gp/" + user.ToLower() +  ">");
             result = client.Receive();
+
+            if (result.Contains("<gp/bad>"))
+            {
+                return null; // нет такого пользователя
+            }
+
+            string[] data = result.Split(new Char[] { '/', '<', '>' });
+
+            return data[2]; // при удаче, возвращается почта, куда отправился пароль
+        }
+
+        public string GetListPeople(string user, double latitude, double longitude)
+        {
+            if (IsConnect == false)
+            {
+                return null; // содинения с сервером нет
+            }
+
+            client.Send("<lh/" + user.ToLower() + "/" + latitude.ToString() + "/" + longitude.ToString() + ">");
+            result = client.Receive();
+
+            if (result.Contains("<lf/bad>"))
+            {
+                return null; // не верный пароль
+            }
+
+            if (result.Contains("<lf/not>"))
+            {
+                return null; // не верное имя пользователя
+            }
+
+            if (result.Contains("<bd>"))
+            {
+                return null; // некорректный запрос
+            }
 
             string[] friends = result.Split(new Char[] { '/', '|', '<', '>' });
 
@@ -377,25 +411,7 @@ namespace EnterPage
 
             return str; // friend1/friend2/../friendn/
         }
-        public string GetPassword(string user)
-        {
-            if (IsConnect == false)
-            {
-                return null; // содинения с сервером нет
-            }
 
-            client.Send("<gp/" + user.ToLower() +  ">");
-            result = client.Receive();
-
-            if (result.Contains("<gp/bad>"))
-            {
-                return null; // нет такого пользователя
-            }
-
-            string[] data = result.Split(new Char[] { '/', '<', '>' });
-
-            return data[2]; // при удаче, возвращается почта, куда отправился пароль
-        }
         public int SetStatus(string user, string password, string status)
         {
             if (IsConnect == false)

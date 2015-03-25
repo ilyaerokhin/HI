@@ -23,6 +23,7 @@ namespace EnterPage
 {
     public partial class ActionPage : PhoneApplicationPage
     {
+            
         PhotoChooserTask photoChooserTask;
         CameraCaptureTask cameraCaptureTask;
         string photo;
@@ -55,7 +56,7 @@ namespace EnterPage
 
             if (request.isConnecting() == false)
             {
-                MessageBox.Show("Неудаётся подключиться к серверу\nВозможно отсутствует подключение к интернету");
+                MessageBox.Show("Can't connect to the server\nPerhaps there is no internet connection");
                 IsolatedStorageSettings.ApplicationSettings.Save();
                 Application.Current.Terminate();
             }
@@ -76,7 +77,7 @@ namespace EnterPage
 
                     if (status == null || datafriends == null)
                     {
-                        MessageBox.Show("Ошибка при получении информации о друзьях, попробуйте ещё раз");
+                        MessageBox.Show("Error in geting information about friends, try again");
                         Refresh();
                     }
 
@@ -117,21 +118,34 @@ namespace EnterPage
             }
             list_potential.DataContext = User.ListPotential;
 
-            User.ListHere = new List<Here>();                                                    // создаём список друзей
-            string herepeople = request.GetListHere(User.Name, User.Latitude.ToString(),User.Longitude.ToString());
-            string[] here = herepeople.Split(new Char[] { '/' });                    // выдёргиваем из ответа строки между разделителями
 
-            // в цикле заполняем список друзей
-            foreach (string s in here)
+            User.ListPeople = new List<People>();                                                    // создаём список друзей
+            string peoplearound = request.GetListPeople(User.Name, User.Latitude, User.Longitude);
+            string[] around = peoplearound.Split(new Char[] { '/' });                    // выдёргиваем из ответа строки между разделителями
+
+            foreach (string s in around)
             {
                 // если строка не пустая
                 if (s.Trim() != "" && !s.Equals(User.Name))
                 {
-                    list_here.DataContext = User.ListHere;
-                    User.ListHere.Add(new Here() { name = s, ImagePath = "http://109.120.164.212/photos/" + s + ".jpg" + "?" + Guid.NewGuid().ToString() });
+                    list_people.DataContext = User.ListPeople;
+                    string datapeople = request.GetFrendCoordinates(s); // получаем данные о друге
+
+                    if (datapeople == null)
+                    {
+                        MessageBox.Show("Error in geting information about people, try again");
+                        Refresh();
+                    }
+
+
+                    string[] data = datapeople.Split(new Char[] { '/' });                // выдёргиваем строки из ответа
+                    double lat = Convert.ToDouble(data[0]);
+                    double lng = Convert.ToDouble(data[1]);
+           
+                    User.ListPeople.Add(new People() { name = s, date = PublicData.DateSearch(data[2]), distance = PublicData.latlng2distance(User.Latitude, User.Longitude, lat, lng), ImagePath = "http://109.120.164.212/photos/" + s + ".jpg" + "?" + Guid.NewGuid().ToString() }); 
                 }
             }
-            list_here.DataContext = User.ListHere;
+            list_people.DataContext = User.ListPeople;
         }
         
         // Функции к галерее и фотику
@@ -184,7 +198,7 @@ namespace EnterPage
         {
             e.Cancel = true;
             Task.Delay(100);
-            if (MessageBox.Show("Вы хотите покинуть приложение?", "Выход", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
+            if (MessageBox.Show("You want to leave the application?", "Exit", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
             {
                 IsolatedStorageSettings.ApplicationSettings.Save();
                 Application.Current.Terminate();
@@ -197,35 +211,35 @@ namespace EnterPage
 
             if (value == 0)
             {
-                MessageBox.Show("Пользователю с ником: " + Friend_box.Text.ToLower() + " отослана заявка в друзья");
+                MessageBox.Show("To user with the nickname: " + Friend_box.Text.ToLower() + " the request to friends was send");
                 this.Refresh();
                 return;
             }
 
             if(value == 1)
             {
-                MessageBox.Show("Вы не можете добавить в друзья пользователя " + Friend_box.Text.ToLower());
+                MessageBox.Show("You can't add user to the friends " + Friend_box.Text.ToLower());
                 this.Friend_box.Text = "";
                 return;
             }
 
             if (value == -1)
             {
-                MessageBox.Show("Отсутствует соединение с сервером");
+                MessageBox.Show("No connection to the server");
                 this.Refresh();
                 return;
             }
 
             if (value == -2)
             {
-                MessageBox.Show("Повторите запрос");
+                MessageBox.Show("Retry the request");
                 this.Friend_box.Text = "";
                 return;
             }
 
             if (value == -3)
             {
-                MessageBox.Show("Непредвиденная ошибка");
+                MessageBox.Show("Unexpected error");
                 this.Refresh();
                 return;
             }
@@ -235,11 +249,11 @@ namespace EnterPage
             int value = request.SetStatus(User.Name, User.Password, status.Text);
             if (value == 0)
             {
-                MessageBox.Show("Статус успешно изменён");
+                MessageBox.Show("Status was chenged successfully");
             }
             else
             {
-                MessageBox.Show("Не удалось изменить статус");
+                MessageBox.Show("Unable to change the status");
             }
 
             status.Text = "";
@@ -255,11 +269,11 @@ namespace EnterPage
 
             if (value != 0)
             {
-                MessageBox.Show("Пользователь не найден");
+                MessageBox.Show("User not found");
             }
             else
             {
-                MessageBox.Show("Пользователю с ником: " + PublicData.Search_friend + " успешно удалён из друзей");
+                MessageBox.Show("User with the nickname: " + PublicData.Search_friend + " successfully removed from friends");
             }
 
             this.Focus();
@@ -290,7 +304,7 @@ namespace EnterPage
         {
             if (String.IsNullOrWhiteSpace(photo))
             {
-                MessageBox.Show("Загрузка фотографии не требуется, так как Вы не изменяли её");
+                MessageBox.Show("Loading photo is not required");
             }
             else
             {
@@ -298,7 +312,7 @@ namespace EnterPage
                 string rez = client.Connect(request.GetIP(), 5000);
                 client.SendFile(photo, User.Name.ToLower() + ".jpg");
                 client.Close();
-                MessageBox.Show("Фотография загружена на сервер");
+                MessageBox.Show("Photo uploaded to the server");
             }
         }
         private void ClickRefresh(object sender, EventArgs e)
@@ -327,11 +341,11 @@ namespace EnterPage
 
             if (value != 0)
             {
-                MessageBox.Show("Неудача");
+                MessageBox.Show("Fail");
             }
             else
             {
-                MessageBox.Show("Пользователю с ником: " + PublicData.Search_friend + " отослана заявка в друзья");
+                MessageBox.Show("User with the nickname: " + PublicData.Search_friend + " was added to friends");
             }
 
             this.Refresh();

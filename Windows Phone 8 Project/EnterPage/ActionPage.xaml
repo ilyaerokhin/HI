@@ -35,7 +35,7 @@
                 <CompositeTransform/>
             </phone:Pivot.RenderTransform>
             <!--Первый элемент Pivot-->
-            <phone:PivotItem Header="ДРУЗЬЯ" Margin="12,10,12,-18" FontWeight="Bold">
+            <phone:PivotItem Header="FRIENDS" Margin="12,10,12,-18" FontWeight="Bold">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition/>
@@ -58,8 +58,8 @@
                                     </StackPanel>
                                     <toolkit:ContextMenuService.ContextMenu  >
                                         <toolkit:ContextMenu>
-                                            <toolkit:MenuItem x:Name="Follow" Header="Следовать" Click="Follow_Click"/>
-                                            <toolkit:MenuItem x:Name="Delete" Header="Удалить" Click="Remove_Click"/>
+                                            <toolkit:MenuItem x:Name="Follow" Header="Follow" Click="Follow_Click"/>
+                                            <toolkit:MenuItem x:Name="Delete" Header="Delete" Click="Remove_Click"/>
                                         </toolkit:ContextMenu>
                                     </toolkit:ContextMenuService.ContextMenu>
                                 </StackPanel>
@@ -72,7 +72,7 @@
             </phone:PivotItem>
 
             <!--Второй элемент Pivot-->
-            <phone:PivotItem Header="ПРОФИЛЬ" Margin="10,28,12,-18" FontWeight="Bold">
+            <phone:PivotItem Header="PROFILE" Margin="10,28,12,-18" FontWeight="Bold">
                 <Grid Background="#FFE5B4">
                     <!--Added background image and text content.-->
                     <Border
@@ -88,34 +88,34 @@
                         <StackPanel x:Name="Camera" Orientation="Horizontal" Margin="0,0,0,15" Height="50" Tap="Camera_Click">
                             <Image Height="50" Width="50" Margin="0,0,0,0" Source="/Resources/camera.png"/>
                             <StackPanel Width="158">
-                                <TextBlock Text="снять фото" TextWrapping="Wrap" Margin="10,12,0,0" Style="{StaticResource PhoneTextSubtleStyle}" Height="37" FontSize="28" Foreground="#FF80461B" FontWeight="Normal" FontFamily="Segoe WPSegoe WP SemiLight"/>
+                                <TextBlock Text="make a foto" TextWrapping="Wrap" Margin="10,12,0,0" Style="{StaticResource PhoneTextSubtleStyle}" Height="37" FontSize="28" Foreground="#FF80461B" FontWeight="Normal" FontFamily="Segoe WPSegoe WP SemiLight"/>
                             </StackPanel>
                         </StackPanel>
 
                         <StackPanel x:Name="Galery" Orientation="Horizontal" Margin="0,0,0,15" Height="50" Tap="Galery_Click">
                             <Image x:Name="cam" Height="50" Width="50" Source="/Resources/folder.png" Margin="0,0,0,0"/>
                             <StackPanel Width="158">
-                                <TextBlock Text="галерея" TextWrapping="Wrap" Margin="10,12,0,0" Style="{StaticResource PhoneTextSubtleStyle}" Height="37" FontSize="28" Foreground="#FF80461B" FontWeight="Normal" FontFamily="Segoe WPSegoe WP SemiLight"/>
+                                <TextBlock Text="gallery" TextWrapping="Wrap" Margin="10,12,0,0" Style="{StaticResource PhoneTextSubtleStyle}" Height="37" FontSize="28" Foreground="#FF80461B" FontWeight="Normal" FontFamily="Segoe WPSegoe WP SemiLight"/>
                             </StackPanel>
                         </StackPanel>
 
                         <StackPanel x:Name="Delete" Orientation="Horizontal" Margin="0,0,0,15" Height="50" Tap="Delete_Click">
                             <Image Height="50" Width="50" Source="/Resources/delete.png" Margin="0,0,0,0"/>
                             <StackPanel Width="158">
-                                <TextBlock Text="удалить" TextWrapping="Wrap" Margin="10,10,0,0" Style="{StaticResource PhoneTextSubtleStyle}" Height="37" FontSize="28" Foreground="#FF80461B" FontWeight="Normal" FontFamily="Segoe WPSegoe WP SemiLight"/>
+                                <TextBlock Text="remove" TextWrapping="Wrap" Margin="10,10,0,0" Style="{StaticResource PhoneTextSubtleStyle}" Height="37" FontSize="28" Foreground="#FF80461B" FontWeight="Normal" FontFamily="Segoe WPSegoe WP SemiLight"/>
                             </StackPanel>
                         </StackPanel>
 
                         <StackPanel x:Name="Load" Orientation="Horizontal" Margin="0,0,0,15" Height="50" Tap="Load_Tap">
                             <Image Height="50" Width="50" Source="/Resources/send photo.png" Margin="0,0,0,0"/>
                             <StackPanel Width="158">
-                                <TextBlock Text="загрузить" TextWrapping="Wrap" Margin="10,10,0,0" Style="{StaticResource PhoneTextSubtleStyle}" Height="37" FontSize="28" Foreground="#FF80461B" FontWeight="Normal" FontFamily="Segoe WPSegoe WP SemiLight"/>
+                                <TextBlock Text="upload" TextWrapping="Wrap" Margin="10,10,0,0" Style="{StaticResource PhoneTextSubtleStyle}" Height="37" FontSize="28" Foreground="#FF80461B" FontWeight="Normal" FontFamily="Segoe WPSegoe WP SemiLight"/>
                             </StackPanel>
                         </StackPanel>
 
                     </ListBox>
 
-                    <TextBlock Text="Статус" Margin="14,277,82,264" FontSize="28" Style="{StaticResource PhoneTextExtraLargeStyle}" FontWeight="Normal" FontFamily="Segoe WPSegoe WP SemiLight" Foreground="#FF80461B"/>
+                    <TextBlock Text="Status" Margin="14,277,82,264" FontSize="28" Style="{StaticResource PhoneTextExtraLargeStyle}" FontWeight="Normal" FontFamily="Segoe WPSegoe WP SemiLight" Foreground="#FF80461B"/>
                     <Image Source="/Resources/edit.png" Margin="396,314,11,208" RenderTransformOrigin="0.501,0.528" Tap="SetStatus_Tap"/>
 
                     <TextBox x:Name="status" Margin="-2,310,61,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="399" BorderBrush="#BFDADADA" MaxLength="25"/>
@@ -123,7 +123,7 @@
             </phone:PivotItem>
 
             <!--Третий элемент Pivot-->
-            <phone:PivotItem Header="ЗАЯВКИ" Margin="12,10,12,-18" FontWeight="Bold">
+            <phone:PivotItem Header="REQUESTS" Margin="12,10,12,-18" FontWeight="Bold">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition/>
@@ -140,8 +140,8 @@
                                     </StackPanel>
                                     <toolkit:ContextMenuService.ContextMenu  >
                                         <toolkit:ContextMenu>
-                                            <toolkit:MenuItem x:Name="Add" Header="Добавить" Click="Add_Click"/>
-                                            <toolkit:MenuItem x:Name="Delete" Header="Отклонить" Click="Remove_Click"/>
+                                            <toolkit:MenuItem x:Name="Add" Header="Add" Click="Add_Click"/>
+                                            <toolkit:MenuItem x:Name="Delete" Header="Delete" Click="Remove_Click"/>
                                         </toolkit:ContextMenu>
                                     </toolkit:ContextMenuService.ContextMenu>
                                 </StackPanel>
@@ -152,43 +152,47 @@
 
                 </Grid>
             </phone:PivotItem>
-            <!--Четвёртый элемент Pivot-->
-            <phone:PivotItem Header="РЯДОМ" Margin="12,10,12,-18" FontWeight="Bold">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition/>
-                        <ColumnDefinition Width="0*"/>
-                    </Grid.ColumnDefinitions>
 
-                    <ListBox x:Name="list_here"  ItemsSource="{Binding}">
-                        <ListBox.ItemTemplate>
-                            <DataTemplate>
-                                <StackPanel x:Name="Here_panel" Orientation="Horizontal" Margin="0,0,0,17" Hold="Profile_panel_Hold">
+        <!--Четвертый элемент Pivot-->
+        <phone:PivotItem Header="PEOPLE" Margin="12,10,12,-18" FontWeight="Bold">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="0*"/>
+                </Grid.ColumnDefinitions>
+
+                <ListBox x:Name="list_people"  ItemsSource="{Binding}">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                                <StackPanel x:Name="Profile_panel" Orientation="Horizontal" Margin="0,0,0,17" Tap="Profile_panel_Tap" Hold="Profile_panel_Hold">
                                     <Image Height="100" Width="100" Source="{Binding ImagePath}" Margin="12,0,9,0"/>
-                                    <StackPanel x:Name="Child" Height="100"  Width="311" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" >
-                                        <TextBlock x:Name="name" Text="{Binding name}" TextWrapping="Wrap" Style="{StaticResource PhoneTextExtraLargeStyle}" FontFamily="Segoe WP" FontSize="35" Foreground="#FF80461B" HorizontalAlignment="Left" VerticalAlignment="Center" />
+                                    <StackPanel x:Name="Child"  Width="311" >
+                                        <TextBlock x:Name="name" Text="{Binding name}" TextWrapping="Wrap" Style="{StaticResource PhoneTextExtraLargeStyle}" FontFamily="Segoe WP" FontSize="35" Foreground="#FF80461B" />
+                                        <TextBlock Text="{Binding date}" TextWrapping="Wrap" Margin="12,-6,12,0" Style="{StaticResource PhoneTextSubtleStyle}" Foreground="#FFCC7722" />
+                                        <TextBlock Text="{Binding distance}" TextWrapping="Wrap" Margin="12,-6,12,0" Style="{StaticResource PhoneTextSubtleStyle}" Foreground="#FFCC7722"/>
                                     </StackPanel>
                                     <toolkit:ContextMenuService.ContextMenu  >
-                                        <toolkit:ContextMenu>
-                                            <toolkit:MenuItem x:Name="Add" Header="Добавить" Click="Add_Click"/>
-                                        </toolkit:ContextMenu>
-                                    </toolkit:ContextMenuService.ContextMenu>
-                                </StackPanel>
+                                    <toolkit:ContextMenu>
+                                            <toolkit:MenuItem x:Name="Follow" Header="Follow" Click="Follow_Click"/>
+                                            <toolkit:MenuItem x:Name="Add" Header="Add" Click="Add_Click"/>
+                                    </toolkit:ContextMenu>
+                                </toolkit:ContextMenuService.ContextMenu>
+                            </StackPanel>
 
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
-                    </ListBox>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
 
-                </Grid>
-            </phone:PivotItem>
+            </Grid>
+        </phone:PivotItem>
         </phone:Pivot>
     </Grid>
 
 
     <phone:PhoneApplicationPage.ApplicationBar>
         <shell:ApplicationBar IsVisible="True" IsMenuEnabled="True" Opacity="0.5"  Mode="Default">
-                <shell:ApplicationBarIconButton IconUri="/Resources/Refresh.png" Text="Обновить" Click="ClickRefresh"/>
-                <shell:ApplicationBarIconButton IconUri="/Resources/Exit.png" Text="Выйти" Click="Exit_Tap"/>
+                <shell:ApplicationBarIconButton IconUri="/Resources/Refresh.png" Text="update" Click="ClickRefresh"/>
+                <shell:ApplicationBarIconButton IconUri="/Resources/Exit.png" Text="exit" Click="Exit_Tap"/>
         </shell:ApplicationBar>
     </phone:PhoneApplicationPage.ApplicationBar>
 

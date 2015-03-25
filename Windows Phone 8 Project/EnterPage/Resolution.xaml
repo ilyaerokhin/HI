@@ -23,35 +23,25 @@
 
         <Grid HorizontalAlignment="Left" Height="67" VerticalAlignment="Top" Width="480" Background="#CC7722">
             <Image Source="/Resources/icona.png" Height="55" Margin="17,-17,395,0" Stretch="UniformToFill"/>
-            <TextBlock TextWrapping="Wrap" Margin="93,17,10,3" FontFamily="Segoe WP SemiLight" FontSize="22" Text="ПОЛЬЗОВАТЕЛЬСКОЕ СОГЛАШЕНИЕ"/>
+            <TextBlock TextWrapping="Wrap" Margin="93,17,10,3" FontFamily="Segoe WP SemiLight" FontSize="26" Text="USER AGREEMENT"/>
         </Grid>
 
         <Grid x:Name="ContentPanel" Margin="14,6,5,10" Grid.Row="1" Background="Transparent">
             <TextBlock HorizontalAlignment="Left" Height="603" Margin="10,13,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="441"  LineHeight="2" Foreground="#FF80461B">
         		<Run Text="   "/>
-        		<Run Text="Для работы этого приложения требуется подключение к Интернету и отправка информации о Вашем местоположении. При этом, некоторые функции могут быть не всегда доступны или давать не точные данные."/>
+        		<Run Text="         To run this application you require an Internet connection and send information about your location. At the same time, some features may not always be available or not give accurate data."/>
         		<LineBreak/>
         		<Run/>
         		<LineBreak/>
-        		<Run Text="   Мы не "/>
-        		<Run Text="запрашиваем"/>
-        		<Run Text=" личные данные пользователей, а так же"/>
-        		<Run Text=","/>
-        		<Run Text=" трек пути, по которому двигается пользователь. Точное местоположение пользователя не передаётся третьим лицам. "/>
-        		<Run Text="Во время работы "/>
-        		<Run Text="приложение использует приблизительные значения координат в целях обеспечения "/>
-        		<Run Text="конфеденциальности"/>
-        		<Run Text=" пользователей. Советуем Вам не указывать личные данные при регистрации, которые позволят точно идентифицировать Ва"/>
-        		<Run Text="шу личность"/>
-        		<Run Text=". Добавляйте в друзья только близких друзей и знакомых."/>
+        		<Run Text="         We don't request personal information from users, as well as, the track of the way in which the user is moving. The exact location of the user is not given to third parties. During operation, the application uses the approximate values ​​of the coordinates in order to ensure the confidentiality of users. We advise you not to provide personal information when registering that will accurately identify your identity. Add to friends only close friends and acquaintances."/>
         		<LineBreak/>
         		<Run/>
         		<LineBreak/>
-        		<Run Text="Приятного использования!"/>
+        		<Run Text="         Enjoy using!"/>
         		<LineBreak/>
         		<Run/>
             </TextBlock>
-            <Button Content="Я принимаю условия использования" HorizontalAlignment="Left" Margin="0,606,0,0" VerticalAlignment="Top" Width="451" Click="Button_Click" Foreground="White" BorderBrush="#BFDADADA" Background="#A9CC7722"/>
+            <Button Content="I accept the terms of use" HorizontalAlignment="Left" Margin="0,606,0,0" VerticalAlignment="Top" Width="451" Click="Button_Click" Foreground="White" BorderBrush="#BFDADADA" Background="#A9CC7722"/>
         </Grid>
     </Grid>
 

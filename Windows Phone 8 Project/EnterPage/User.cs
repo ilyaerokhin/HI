@@ -12,8 +12,8 @@ namespace EnterPage
         public static string Password;
         public static string PhotoPath;
         public static List<Friend> ListFriends;
+        public static List<People> ListPeople;
         public static List<Potential> ListPotential;
-        public static List<Here> ListHere;
         public static double Latitude;
         public static double Longitude;
     }
