@@ -339,6 +339,44 @@ namespace EnterPage
 
             return str; // friend1/friend2/../friendn/
         }
+
+        public string GetListHere(string user, string x, string y)
+        {
+            if (IsConnect == false)
+            {
+                return null; // содинения с сервером нет
+            }
+
+            client.Send("<lh/" + user.ToLower() + "/" + x + "/" + y + ">");
+            result = client.Receive();
+
+            string[] friends = result.Split(new Char[] { '/', '|', '<', '>' });
+
+            // флажок нужен для пропуска первого захода
+            bool flag = true;
+            string str = "";
+
+            // в цикле заполняем список друзей
+            foreach (string s in friends)
+            {
+                // если строка не пустая
+                if (s.Trim() != "")
+                {
+                    // исключаем первый заход
+                    if (flag != true)
+                    {
+                        str = str + s + "/";
+                    }
+                    else
+                    {
+                        // смена флага
+                        flag = false;
+                    }
+                }
+            }
+
+            return str; // friend1/friend2/../friendn/
+        }
         public string GetPassword(string user)
         {
             if (IsConnect == false)

@@ -116,6 +116,22 @@ namespace EnterPage
                 }
             }
             list_potential.DataContext = User.ListPotential;
+
+            User.ListHere = new List<Here>();                                                    // создаём список друзей
+            string herepeople = request.GetListHere(User.Name, User.Latitude.ToString(),User.Longitude.ToString());
+            string[] here = herepeople.Split(new Char[] { '/' });                    // выдёргиваем из ответа строки между разделителями
+
+            // в цикле заполняем список друзей
+            foreach (string s in here)
+            {
+                // если строка не пустая
+                if (s.Trim() != "" && !s.Equals(User.Name))
+                {
+                    list_here.DataContext = User.ListHere;
+                    User.ListHere.Add(new Here() { name = s, ImagePath = "http://109.120.164.212/photos/" + s + ".jpg" + "?" + Guid.NewGuid().ToString() });
+                }
+            }
+            list_here.DataContext = User.ListHere;
         }
         
         // Функции к галерее и фотику

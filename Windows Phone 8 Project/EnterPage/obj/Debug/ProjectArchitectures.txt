@@ -1,2 +1,2 @@
-C:\Users\user\Desktop\HI\Windows Phone 8 Project\EnterPage\EnterPage.csproj;neutral
-C:\Users\user\Desktop\HI\Windows Phone 8 Project\ScheduledTaskAgent1\ScheduledTaskAgent1.csproj;neutral
+C:\Users\Илья\Desktop\Windows Phone 8 Project\EnterPage\EnterPage.csproj;neutral
+C:\Users\Илья\Desktop\Windows Phone 8 Project\ScheduledTaskAgent1\ScheduledTaskAgent1.csproj;neutral
