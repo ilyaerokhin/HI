@@ -3,20 +3,20 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/sec_color"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:weightSum="1">
 
     <ImageView
         android:id="@+id/icon"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:src="@drawable/no_photo"
-        android:layout_marginBottom="100dp"
-        android:layout_weight="1" />
+        android:layout_height="217dp"
+        android:src="@drawable/nophoto"
+        android:layout_weight="0.42" />
 
     <TextView
         android:layout_width="175dp"
         android:layout_height="44dp"
-        android:text="Enter status"
+        android:text="Your status"
         android:id="@+id/textView" />
 
     <EditText
@@ -32,9 +32,9 @@
         android:id="@+id/button"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
+        android:onClick="myButtonClickListener"
         android:background="@color/navpage_color"
         android:textColor="@color/white"
         android:layout_gravity="right" />
-
 
 </LinearLayout>

@@ -23,6 +23,7 @@ public class ForgotPasswordPage extends ActionBarActivity implements View.OnClic
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_HOME | ActionBar.DISPLAY_SHOW_TITLE);
         actionBar.setIcon(R.drawable.ic72);
+        actionBar.setTitle("Forgot your password?");
         NameForgot =(EditText)findViewById(R.id.NameForgotEdit);
         recoverButton.setOnClickListener(this);
 

@@ -32,12 +32,30 @@
     <string name="label3">Requests</string>
     <string name="action_search">Search</string>
     <string name="title_activity_main_page">MainPage</string>
-
-
+    <string name="item4">Item4</string>
+    <string name="action_refresh">Refresh</string>
+    <string name="action_exit">Exit</string>
     <string-array name="screen_array">
         <item>Profile</item>
         <item>Friends</item>
         <item>Requests</item>
+        <item>People</item>
+    </string-array>
+
+    <string-array name="menu_friend">
+        <item>Follow</item>
+        <item>Delete</item>
+    </string-array>
+
+    <string-array name="menu_request">
+        <item>Add</item>
+        <item>Ignore</item>
     </string-array>
     <string name="title_activity_resolution_page">ResolutionPage</string>
+    <string name="title_activity_follow_page">FollowPage</string>
+
+    <string-array name="menu_people">
+        <item>Add</item>
+    </string-array>
+
 </resources>

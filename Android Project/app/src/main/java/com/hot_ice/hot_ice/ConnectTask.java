@@ -64,6 +64,7 @@ public class ConnectTask extends AsyncTask<String, String, Integer> {
                 e.printStackTrace();
             }
             mTcpClient.run();
+
         } else {
             Log.e("Неудалось установить подключение...", "Подключение");
         }

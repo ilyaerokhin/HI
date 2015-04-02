@@ -2,6 +2,7 @@ package com.hot_ice.hot_ice;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -11,24 +12,24 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-public class RequestsFragment extends Fragment {
+public class PeopleFragment extends Fragment {
 
-    public RequestsFragment() {
-
+    public PeopleFragment() {
     }
 
-    RequestsAdapter requestsAdapter;
+    PeopleAdapter peopleAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_friend, container,
+        View rootView = inflater.inflate(R.layout.fragment_people, container,
                 false);
         ListView lvMain = (ListView) rootView.findViewById(R.id.lvMain);
 
-        requestsAdapter = new RequestsAdapter(getActivity());
+        peopleAdapter = new PeopleAdapter(getActivity());
 
-        lvMain.setAdapter(requestsAdapter);
+        lvMain.setAdapter(peopleAdapter);
+
         registerForContextMenu(lvMain);
 
         return rootView;
@@ -38,7 +39,7 @@ public class RequestsFragment extends Fragment {
     public void onCreateContextMenu(ContextMenu menu, View v,
                                     ContextMenu.ContextMenuInfo menuInfo) {
         if (v.getId()==R.id.lvMain) {
-            String[] menuItems = getResources().getStringArray(R.array.menu_request);
+            String[] menuItems = getResources().getStringArray(R.array.menu_people);
 
             for (int i = 0; i<menuItems.length; i++) {
                 menu.add(Menu.NONE, i, i, menuItems[i]);
@@ -53,14 +54,12 @@ public class RequestsFragment extends Fragment {
         switch (item.getItemId()) {
             // пункты меню для tvColor
             case 0 :
-                UserData.request=UserData.ListRequests.get(info.position);
-                new ConnectTask().execute(UserData.createMessage("af", UserData.Name, UserData.Password,UserData.request.name));
-                break;
-            case 1 :
-                UserData.request=UserData.ListRequests.get(info.position);
-                new ConnectTask().execute(UserData.createMessage("df", UserData.Name, UserData.Password,UserData.request.name));
+                UserData.addPeople=UserData.ListPeople.get(info.position);
+                Log.e("friend", UserData.addPeople.name.toString());
+                new ConnectTask().execute(UserData.createMessage("af", UserData.Name, UserData.Password,UserData.addPeople.name.toString()));
                 break;
         }
         return super.onContextItemSelected(item);
     }
+
 }

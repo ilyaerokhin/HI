@@ -46,6 +46,8 @@ public class NavigationPage extends ActionBarActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        /*locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
+                1000, 10, locationListener);*/
         SimpleSemaphore semaphore = new SimpleSemaphore();
         locationManager.requestLocationUpdates(
                 LocationManager.NETWORK_PROVIDER, 0, 10,
@@ -65,8 +67,7 @@ public class NavigationPage extends ActionBarActivity {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-
-                    new ConnectTask().execute(User.createMessage("uc",User.Name,latitude,longitude));
+                    new ConnectTask().execute(User.createMessage("uc",User.Name,UserData.latitude,UserData.longitude));
                 }
             }, 3000);
 
@@ -119,10 +120,9 @@ public class NavigationPage extends ActionBarActivity {
     };
 
     private Void receiveLocation(Location location) {
-	
         if (location != null) {
-            longitude = Double.toString(location.getLongitude());
-            latitude = Double.toString(location.getLatitude());
+            UserData.longitude = Double.toString(location.getLongitude());
+            UserData.latitude = Double.toString(location.getLatitude());
         }
         return null;
     }
@@ -131,6 +131,8 @@ public class NavigationPage extends ActionBarActivity {
         sPref = getSharedPreferences("main",MODE_PRIVATE);
         User.Name     = sPref.getString("Name", "");
         User.Password = sPref.getString("Password", "");
+        UserData.longitude=sPref.getString("Longitude","");
+        UserData.latitude=sPref.getString("Latitude","");
     }
 
 }

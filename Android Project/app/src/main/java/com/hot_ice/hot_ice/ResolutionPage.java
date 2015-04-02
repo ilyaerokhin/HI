@@ -19,7 +19,7 @@ public class ResolutionPage extends ActionBarActivity implements View.OnClickLis
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_HOME | ActionBar.DISPLAY_SHOW_TITLE);
         actionBar.setIcon(R.drawable.ic72);
-
+        actionBar.setTitle("User Agreement");
         TextView textView = (TextView)findViewById(R.id.Resolution);
         textView.setText("To run this application you require an Internet connection and send information about your location. At the same time, some features may not always be available or not give accurate data.\n" +
                 "\n" +

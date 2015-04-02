@@ -96,6 +96,7 @@ public class RegistrationPage extends ActionBarActivity {
     public void onBackPressed() {
 
         android.os.Process.killProcess(android.os.Process.myPid());
+        // This above line close correctly
     }
 
     public void onSingInButton(View view)
@@ -120,21 +121,12 @@ public class RegistrationPage extends ActionBarActivity {
                         new ConnectTask().execute(UserData.createMessage("ad",UserData.Name,UserData.Password,Email));
                     }
                 }, 0);
-				
-				new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-
-                    new ConnectTask().execute(User.createMessage("uc",User.Name,latitude,longitude));
-                }
-            }, 3000);
-
-                new Handler().postDelayed(new Runnable() {				
+                new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         startActivity(new Intent(getApplicationContext(), ActionPage.class));
                     }
-                }, 5000);
+                }, 1000);
             }
             else {
                 Toast.makeText(this, "Invalid Email", Toast.LENGTH_SHORT).show();
@@ -174,37 +166,6 @@ public class RegistrationPage extends ActionBarActivity {
         ed.commit();
         Log.e("Сохранено", UserData.Name);
         Log.e("Сохранено", UserData.Password);
-    }
-	
-	    private LocationListener locationListener = new LocationListener() {
-
-        @Override
-        public void onLocationChanged(Location location) {
-            receiveLocation(location);
-        }
-
-        @Override
-        public void onStatusChanged(String provider, int status, Bundle extras) {
-
-        }
-
-        @Override
-        public void onProviderDisabled(String provider) {
-        }
-
-        @Override
-        public void onProviderEnabled(String provider) {
-            receiveLocation(locationManager.getLastKnownLocation(provider));
-        }
-
-    };
-
-    private Void receiveLocation(Location location) {
-        if (location != null) {
-            longitude = Double.toString(location.getLongitude());
-            latitude = Double.toString(location.getLatitude());
-        }
-        return null;
     }
 
 }

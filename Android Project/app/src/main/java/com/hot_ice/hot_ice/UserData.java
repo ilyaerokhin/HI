@@ -1,19 +1,30 @@
 package com.hot_ice.hot_ice;
 
+import android.util.Log;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.TimeZone;
+import java.util.concurrent.TimeUnit;
 
 public class UserData {
+    public static int index;
+    public static Friend followFriend;
     public static String Name = null;
     public static String Password = null;
-    public static String PhotoPath;
     public static ArrayList<Friend> ListFriends= new ArrayList<Friend>();
-    public static double Latitude;
-    public static double Longitude;
-    public static String location;
-    public static String[] friendList;
-    public static double latitude;
-    public static double longitude;
+    public static ArrayList<People> ListPeople= new ArrayList<People>();
+    public static ArrayList<Requests> ListRequests= new ArrayList<Requests>();
+    public static String latitude;
+    public static String longitude;
+
+    public static People addPeople;
+    public static Friend deleteFriend;
+    public static Requests request;
+    public static String Status;
 
     public static String createMessage(String... param)
     {
@@ -31,13 +42,27 @@ public class UserData {
             case "gp":
                 message="<"+param[0]+"/"+param[1]+">";
                 break;
-            case "lf":
+            case "fl":
                 message="<"+param[0]+"/"+param[1]+"/"+param[2]+">";
                 break;
             case "fd":
                 message="<"+param[0]+"/"+param[1]+">";
                 break;
-
+            case "pl":
+                message="<"+param[0]+"/"+param[1]+"/"+param[2]+"/"+param[3]+">";
+                break;
+            case "lp":
+                message="<"+param[0]+"/"+param[1]+"/"+param[2]+">";
+                break;
+            case "af":
+                message="<"+param[0]+"/"+param[1]+"/"+param[2]+"/"+param[3]+">";
+                break;
+            case "df":
+                message="<"+param[0]+"/"+param[1]+"/"+param[2]+"/"+param[3]+">";
+                break;
+            case "ss":
+                message="<"+param[0]+"/"+param[1]+"/"+param[2]+"/"+param[3]+">";
+                break;
             default:
 
                 break;
@@ -76,28 +101,119 @@ public class UserData {
         double dist = ad * R; //расстояние между двумя координатами в метрах
 
 
-
-        return dist+"м";
+        if(dist<1000)
+            return (int)dist+" m";
+        return (int)(dist/1000)+" km";
     }
-    /*public static String DateSearch(String dateString)// поиск интервала времени
+    public static String DateSearch(String dateString)// поиск интервала времени
     {
-        long dateValue;// тип для расчета
+        String result;
+        Date dateValue;// тип для расчета
         Date dateValue2 = new Date();
         String format;
         if (dateString.toCharArray()[8] == ' ')
         {
-            format = "ddd MMM  d HH:mm:ss yyyy";// формат даты
+            format = "E MMM  d HH:mm:ss yyyy";// формат даты
         }
         else
         {
-            format = "ddd MMM dd HH:mm:ss yyyy";// формат даты
+            format = "E MMM dd HH:mm:ss yyyy";// формат даты
         }
-
-        dateValue = Date.parse(dateString);//парсим строку в дату(in, )
-        //long diff1 = dateValue2.getTime() - dateValue.getTime();
-
-        //String result=(diff1 / (60 * 1000) % 60)+"минут";
-       // return result;
-    }*/
+        TimeZone tz = TimeZone.getDefault();
+        long hours = TimeUnit.MILLISECONDS.toHours(tz.getRawOffset());
+        Log.e("dateString", dateString);
+        try
+        {
+            Log.e("dateString", "test1");
+            DateFormat df = new SimpleDateFormat(format);
+            dateValue = df.parse(dateString);
+            Log.e("dateString", "test2");
+            long diff = dateValue2.getTime() - dateValue.getTime();
+            if (hours == 3)
+            {
+                if ((diff/1000) < 60)// возвращение строки
+                {
+                    result = " now";
+                    return result;
+                }
+                else
+                if ((diff/(1000*60)) < 60)
+                {
+                    result = (int)(diff/(1000*60))+ " mins ago";
+                    return result;
+                }
+                else if ((diff/(1000*60*60)) < 24)
+                {
+                    result = (int)(diff/(1000*60*60)) +" hours ago";
+                    return result;
+                }
+                else
+                if ((diff/(1000*60*60*24)) < 365)
+                {
+                    result = (int)(diff/(1000*60*60*24))+" days ago";
+                    return result;
+                }
+            }
+            else
+            {
+                if (hours > 3)
+                {
+                    if ((diff/1000) - (hours - 3) * 3600 < 60)// возвращение строки
+                    {
+                        result = " now";
+                        return result;
+                    }
+                    else
+                    if ((diff/(1000*60)) - (hours - 3) * 60 < 60)
+                    {
+                        result = (int)((diff/(1000*60)) - (hours - 4) * 60) + " mins ago";
+                        return result;
+                    }
+                    else if ((diff/(1000*60*60)) - (hours - 3) < 24)
+                    {
+                        result = (int)((diff/(1000*60*60)) - (hours - 4)) + " hours ago";
+                        return result;
+                    }
+                    else
+                    if ((diff/(1000*60*60*24)) - (hours - 3) * 1 / 24 < 365)
+                    {
+                        result = (int)((diff/(1000*60*60*24)) - (hours - 4) * 1 / 24) + " days ago";
+                        return result;
+                    }
+                }
+                else
+                {
+                    if (hours < 3)
+                    {
+                        if ((diff/1000) + (-1) * (hours - 3) * 3600 < 60)// возвращение строки
+                        {
+                            result = "сейчас";
+                            return result;
+                        }
+                        else
+                        if ((diff/(1000*60)) + (-1) * (hours - 3) * 60 < 60)
+                        {
+                            result = (int)((diff/(1000*60)) + (-1) * (hours - 4) * 60) + " mins ago";
+                            return result;
+                        }
+                        else if ((diff/(1000*60*60)) + (-1) * (hours - 3) < 24)
+                        {
+                            result = (int)((diff/(1000*60*60)) + (-1) * (hours - 4)) + " hours ago";
+                            return result;
+                        }
+                        else
+                        if ((diff/(1000*60*60*24)) + (-1) * (hours - 3) * 1 / 24 < 365)
+                        {
+                            result = (int)((diff/(1000*60*60*24)) + (-1) * (hours - 4) * 1 / 24) + " days ago";
+                            return result;
+                        }
+                    }
+                }
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
 }
 

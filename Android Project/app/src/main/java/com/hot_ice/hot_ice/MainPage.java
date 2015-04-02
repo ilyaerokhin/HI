@@ -42,11 +42,17 @@ public class MainPage extends ActionBarActivity implements OnClickListener {
     }
 
     @Override
-    protected void onDestroy() {
+    protected void onPause() {
         super.onPause();
         android.os.Process.killProcess(android.os.Process.myPid());
-
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        android.os.Process.killProcess(android.os.Process.myPid());
+    }
+
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
@@ -57,8 +63,10 @@ public class MainPage extends ActionBarActivity implements OnClickListener {
 
                     UserData.Name = NameEd.getText().toString();
                     UserData.Name = UserData.Name.toLowerCase();
+                    Log.e("Name",UserData.Name);
                     UserData.Password = PasswordEd.getText().toString();
                     UserData.Password = UserData.Password.toLowerCase();
+                    Log.e("Name", UserData.Password);
 
                     new ConnectTask().execute(UserData.createMessage("cu",UserData.Name,UserData.Password));
 
@@ -68,13 +76,7 @@ public class MainPage extends ActionBarActivity implements OnClickListener {
                             if (TCPClient.serverMessage.toString().equals("<cu/ok>"))
                             {
                                 saveText();
-								new Handler().postDelayed(new Runnable() {
-								@Override
-								public void run() {
-								new ConnectTask().execute(User.createMessage("uc",User.Name,latitude,longitude));
-										startActivity(new Intent(getApplicationContext(), ActionPage.class));								
-								}}, 3000);
-                                
+                                startActivity(new Intent(getApplicationContext(), ActionPage.class));
                             }
                             else
                             {
@@ -94,45 +96,15 @@ public class MainPage extends ActionBarActivity implements OnClickListener {
                 break;
         }
     }
-	
-	private LocationListener locationListener = new LocationListener() {
-
-        @Override
-        public void onLocationChanged(Location location) {
-            receiveLocation(location);
-        }
-
-        @Override
-        public void onStatusChanged(String provider, int status, Bundle extras) {
-
-        }
-
-        @Override
-        public void onProviderDisabled(String provider) {
-        }
-
-        @Override
-        public void onProviderEnabled(String provider) {
-            receiveLocation(locationManager.getLastKnownLocation(provider));
-        }
-
-    };
-
-    private Void receiveLocation(Location location) {
-        if (location != null) {
-            longitude = Double.toString(location.getLongitude());
-            latitude = Double.toString(location.getLatitude());
-        }
-        return null;
-    }
     void saveText() {
 
         sPref = getSharedPreferences("main",MODE_PRIVATE);
         SharedPreferences.Editor ed = sPref.edit();
         ed.putString("Name", UserData.Name);
         ed.putString("Password",UserData.Password);
+        ed.putString("Longitude", UserData.longitude);
+        ed.putString("Latitude", UserData.latitude);
         ed.commit();
-        Log.e("Сохранено", UserData.Name);
-        Log.e("Сохранено", UserData.Password);
+
     }
 }

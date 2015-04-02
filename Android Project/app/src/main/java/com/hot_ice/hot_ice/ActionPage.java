@@ -1,8 +1,15 @@
 package com.hot_ice.hot_ice;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -16,100 +23,177 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.Toast;
-
-import java.util.ArrayList;
+import android.widget.ProgressBar;
 
 public class ActionPage extends ActionBarActivity {
     SharedPreferences sPref;
-    public static UserData User;
-    String parts;
-    String[] parts1;
     private String[] mScreenTitles;
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
-    int num=0;
     private ActionBarDrawerToggle mDrawerToggle;
     private CharSequence mDrawerTitle;
     private CharSequence mTitle;
     public static String[] friendList;
-    String[] mas;
-    double lat;
-    double log;
-    String date;
-    String status;
-    String name;
-    static int q=0;
-    String[] friendData;
-    public static ArrayList<Friend> listFriend= new ArrayList<Friend>();
-
-
+    String parts;
+    String[] Datafriend;
+    ProgressBar progressBar;
+    AlertDialog.Builder ad;
+    String addFriend;
+    LocationManager locationManager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_page);
+        loadText();
+        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        locationManager.requestLocationUpdates(
+                LocationManager.NETWORK_PROVIDER, 0, 10,
+                locationListener);
+
+        ad = new AlertDialog.Builder(this);
+
+        ad.setTitle("Add Friend");
+        ad.setMessage("Enter name friend");
+
+        final EditText input = new EditText(this);
+        ad.setView(input);
+
+        ad.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                addFriend = input.getText().toString();
+                new ConnectTask().execute(UserData.createMessage("af", UserData.Name, UserData.Password,addFriend));
+            }
+        });
+
+        ad.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                // Если отменили.
+            }
+        });
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_HOME | ActionBar.DISPLAY_SHOW_TITLE);
         actionBar.setTitle("Hello, " + UserData.Name + "!");
-        loadText();
+
+        progressBar = (ProgressBar) findViewById(R.id.prograssBar);
+        progressBar.setVisibility(View.VISIBLE);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        getSupportActionBar().setHomeButtonEnabled(false);
 
 
-     /*   new Handler().postDelayed(new Runnable() {
+
+        new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
 
-                new ConnectTask().execute(UserData.createMessage("lf",User.Name,User.Password));
+                new ConnectTask().execute(UserData.createMessage("fl", UserData.Name, UserData.Password));
             }
         }, 0);
 
-        /*new Handler().postDelayed(new Runnable() {
+        new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-
                 parts = TCPClient.serverMessage.toString();
                 int index = parts.indexOf(">");
-                parts=parts.substring(1, index);
-                String delimiter = "\\|";
+                parts=parts.substring(4, index);
+                String delimiter = "\\/";
                 friendList=parts.split(delimiter);
-           }
-        }, 2000);
+                //arr2 = new Friend[3];
+                if (parts.equals("bad")){}
+                else
+                    {
+                        for(int i=0;i<friendList.length;i++)
+                        {
+                            Datafriend=friendList[i].split("\\|");
+                            if(Datafriend[3].equals("@"))
+                                Datafriend[3] = "";
+                            UserData.ListFriends.add(new Friend(Datafriend[0], Datafriend[3],UserData.DateSearch(Datafriend[4]) ,
+                                    UserData.latlng2distance(Double.parseDouble( Datafriend[1].replace(",",".")),Double.parseDouble( Datafriend[2].replace(",",".")),Double.parseDouble( UserData.latitude.replace(",",".")),Double.parseDouble( UserData.longitude.replace(",",".")) )
+                                    ,"http://109.120.164.212/photos/"+Datafriend[0]+".jpg"));
+                        }
 
-
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run () {
-            if(!friendList[1].equals("bad"))
-            {
-
-                for (q = 0; q <= 2; q++) {
-                    new ConnectTask().execute(UserData.createMessage("fd", friendList[q]));
+                    }
                 }
-            }
-            }
-        }, 3000);
+        }, 3500);
 
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                if(!friendList[1].equals("bad")) {
-                    int i = 0;
-                    parts = TCPClient.serverMessage.toString();
-                    Log.e("dfsgsfdgsdfgsdgsdfgsdfg", parts);
 
-                    int index = parts.indexOf(">");
-                    parts = parts.substring(4, index);
-                    String delimiter = "\\/";
-                    String[] friendData = parts.split(delimiter);
+                new ConnectTask().execute(UserData.createMessage("pl", UserData.Name, UserData.latitude,UserData.longitude));
+            }
+        }, 4000);
 
-                    if (friendData[4].equals("@")) {
-                        UserData.ListFriends.add(new Friend(friendData[0], "", friendData[3], UserData.latlng2distance(UserData.latitude, UserData.longitude, Double.parseDouble(friendData[1].replace(",", ".")), Double.parseDouble(friendData[2].replace(",", "."))), "http://109.120.164.212/photos/" + friendData[0] + ".jpg"));
-                    } else
-                        UserData.ListFriends.add(new Friend(friendData[0], friendData[4], friendData[3], UserData.latlng2distance(UserData.latitude, UserData.longitude, Double.parseDouble(friendData[1].replace(",", ".")), Double.parseDouble(friendData[2].replace(",", "."))), "http://109.120.164.212/photos/" + friendData[0] + ".jpg"));
-                }}
-        }, 5000);*/
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                parts = TCPClient.serverMessage.toString();
+                int index = parts.indexOf(">");
+                parts=parts.substring(4, index);
+                String delimiter = "\\/";
+                friendList=parts.split(delimiter);
+                for(int i=0;i<friendList.length;i++)
+                {
+                    Datafriend=friendList[i].split("\\|");
+                    if (Datafriend[0].equals(UserData.Name)) {UserData.Status =Datafriend[3];}
+                    else
+                    {
+                        if(Datafriend[3].equals("@"))
+                            Datafriend[3] = "";
+                        UserData.ListPeople.add(new People(Datafriend[0], Datafriend[3], UserData.DateSearch(Datafriend[4]),
+                                UserData.latlng2distance(Double.parseDouble( Datafriend[1].replace(",",".")),Double.parseDouble( Datafriend[2].replace(",",".")),Double.parseDouble( UserData.latitude.replace(",",".")),Double.parseDouble( UserData.longitude.replace(",",".")) ),
+                                "http://109.120.164.212/photos/" + Datafriend[0] + ".jpg"));
+                    }
+                }
+
+            }
+        }, 5000);
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+
+                new ConnectTask().execute(UserData.createMessage("lp", UserData.Name, UserData.Password));
+            }
+        }, 6000);
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+               parts = TCPClient.serverMessage.toString();
+                int index = parts.indexOf(">");
+                parts=parts.substring(3, index);
+
+                if (parts.equals("/"))
+                {}
+                else
+                {
+                    parts=parts.substring(1);
+                    Log.e("parts", parts);
+                    if (parts.equals("bad")){}
+                    else
+                    {
+                        String delimiter = "\\/";
+                        Datafriend=parts.split(delimiter);
+                        for(int i=0;i<Datafriend.length;i++)
+                        {
+                            Log.e("Name", Datafriend[i]);
+                            UserData.ListRequests.add(new Requests(Datafriend[i]));
+                        }
+                    }
+                }
+                progressBar.setVisibility(View.INVISIBLE);
+                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+                getSupportActionBar().setHomeButtonEnabled(true);
+
+
+            }
+        }, 7500);
+
         mTitle = mDrawerTitle = getTitle();
         mScreenTitles = getResources().getStringArray(R.array.screen_array);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -122,8 +206,8 @@ public class ActionPage extends ActionBarActivity {
         Log.d("Test","готов");
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
+        /*getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);*/
 
         mDrawerToggle = new ActionBarDrawerToggle(
                 this, /* host Activity */
@@ -170,6 +254,7 @@ public class ActionPage extends ActionBarActivity {
         // If the nav drawer is open, hide action items related to the content view
         boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
         menu.findItem(R.id.action_search).setVisible(!drawerOpen);
+        menu.findItem(R.id.menu_overflow).setVisible(!drawerOpen);
         return super.onPrepareOptionsMenu(menu);
     }
 
@@ -183,8 +268,15 @@ public class ActionPage extends ActionBarActivity {
         // Handle action buttons
         switch(item.getItemId()) {
             case R.id.action_search:
-                // Show toast about click.
-                Toast.makeText(this, R.string.action_search, Toast.LENGTH_SHORT).show();
+                ad.show();
+                return true;
+            case R.id.action_refresh:
+                Intent i = new Intent(ActionPage.this, ActionPage.class);
+                startActivity(i);
+                return true;
+            case R.id.action_exit:
+                saveText();
+                android.os.Process.killProcess(android.os.Process.myPid());
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -213,6 +305,9 @@ public class ActionPage extends ActionBarActivity {
             case 2:
                 fragment = new RequestsFragment();
                 break;
+            case 3:
+                fragment = new PeopleFragment();
+                break;
             default:
                 break;
         }
@@ -239,11 +334,6 @@ public class ActionPage extends ActionBarActivity {
         getSupportActionBar().setTitle(mTitle);
     }
 
-    /**
-     * When using the ActionBarDrawerToggle, you must call it during
-     * onPostCreate() and onConfigurationChanged()...
-     */
-
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
@@ -254,12 +344,59 @@ public class ActionPage extends ActionBarActivity {
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        // Pass any configuration change to the drawer toggles
+
         mDrawerToggle.onConfigurationChanged(newConfig);
+    }
+
+    private LocationListener locationListener = new LocationListener() {
+
+        @Override
+        public void onLocationChanged(Location location) {
+            receiveLocation(location);
+        }
+
+        @Override
+        public void onStatusChanged(String provider, int status, Bundle extras) {
+
+        }
+
+        @Override
+        public void onProviderDisabled(String provider) {
+        }
+
+        @Override
+        public void onProviderEnabled(String provider) {
+            receiveLocation(locationManager.getLastKnownLocation(provider));
+        }
+
+    };
+
+    private Void receiveLocation(Location location) {
+        if (location != null) {
+            UserData.longitude = Double.toString(location.getLongitude());
+            UserData.latitude = Double.toString(location.getLatitude());
+        }
+        return null;
     }
     void loadText() {
         sPref = getSharedPreferences("main",MODE_PRIVATE);
-        User.Name     = sPref.getString("Name", "");
-        User.Password = sPref.getString("Password", "");
+        UserData.Name     = sPref.getString("Name", "");
+        UserData.Password = sPref.getString("Password", "");
+        UserData.longitude=sPref.getString("Longitude","");
+        UserData.latitude=sPref.getString("Latitude","");
     }
+
+    void saveText() {
+
+        sPref = getSharedPreferences("main",MODE_PRIVATE);
+        SharedPreferences.Editor ed = sPref.edit();
+        ed.putString("Name", "");
+        ed.putString("Password","");
+        ed.putString("Longitude","");
+        ed.putString("Latitude","");
+        ed.commit();
+
+    }
+
+
 }

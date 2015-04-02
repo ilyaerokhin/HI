@@ -8,9 +8,10 @@ import java.io.OutputStream;
 import java.net.Socket;
 
 public class TCPClient implements Runnable {
+    private SimpleSemaphore semaphore = null;
     public static String serverMessage;
     Socket mSocket;
-    public static final String SERVERIP = "109.120.164.212"; 
+    public static final String SERVERIP = "109.120.164.212"; //your computer IP address
     public static final int SERVERPORT = 32000;
     boolean Run = true;
     public static UserData User;
@@ -18,7 +19,7 @@ public class TCPClient implements Runnable {
     private InputStream in = null;
     private OutputStream out = null;
 
-    public TCPClient(Socket socket,SimpleSemaphore semaphore) {
+    public TCPClient(Socket socket, SimpleSemaphore semaphore) {
 
         this.semaphore = semaphore;
 
@@ -51,13 +52,18 @@ public class TCPClient implements Runnable {
     public void run() {
         byte[] buffer = new byte[256]; // buffer store for the stream
         int bytes; // bytes returned from read()
+        Log.e("test1", "УРАААА");
+        // Keep listening to the InputStream until an exception occurs
         while (Run) {
             try {
                 // Read from the InputStream
                 bytes = in.read(buffer); // Получаем кол-во байт и само собщение в байтовый массив "buffer"
 
                 serverMessage = new String(buffer, 0, bytes);
+                semaphore.take();
+                Log.e("Сообщение пришло...", "УРАААА");
                 Log.e("RESPONSE FROM SERVER", "S: Received Message: '" + serverMessage + "'");
+                semaphore.release();
                 if (serverMessage != null)
                     Run=false;
 
@@ -71,6 +77,7 @@ public class TCPClient implements Runnable {
             }
         }
     }
+
 
 
 }
